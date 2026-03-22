@@ -1,0 +1,41 @@
+# EFA Experiment Configuration — Karthick Raja M, 2026
+
+# Models
+generator_model: "gpt-4o"
+evaluator_model: "claude-sonnet-4-20250514"  # Cross-model to avoid self-preference bias
+
+# Hyperparameters (Section 4.4)
+n_criteria: 5
+threshold: 0.6          # tau — criterion score >= 3/5
+max_iterations: 3       # K_max
+alpha: 2.0              # Reattention strength
+epsilon: 0.1            # Regression tolerance
+batched_eval: false     # Per-criterion individual eval (more precise)
+
+# Experiment
+prompt_source: "mt-bench"  # mt-bench | alpaca-eval | arena-hard | custom
+max_prompts: 50            # Number of prompts to evaluate
+seed: 42
+
+# Baselines to run
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - all-criteria-at-once
+  - uniform-reattention
+  - best-of-n
+
+# Best-of-N config
+best_of_n_samples: 5
+
+# Ablations to run
+ablations:
+  - efa-no-dyncriteria
+  - efa-no-cmpg
+  - efa-no-fwrl
+  - efa-no-iteration
+
+# Output
+results_dir: "experiments/results"
+save_responses: true

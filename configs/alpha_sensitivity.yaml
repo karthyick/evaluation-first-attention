@@ -1,0 +1,18 @@
+# Alpha sensitivity study — Karthick Raja M, 2026
+# Tests reattention strength values: 1.0, 2.0, 5.0
+
+generator_model: "gpt-4o"
+evaluator_model: "claude-sonnet-4-20250514"
+
+n_criteria: 5
+threshold: 0.6
+max_iterations: 3
+epsilon: 0.1
+
+prompt_source: "mt-bench"
+max_prompts: 50
+
+# Sweep alpha values
+alpha_values: [1.0, 2.0, 5.0]
+
+results_dir: "experiments/results/alpha_sweep"

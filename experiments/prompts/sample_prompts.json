@@ -1,0 +1,52 @@
+[
+    {
+        "id": "sample-001",
+        "prompt": "Explain the difference between machine learning and deep learning to someone with no technical background.",
+        "category": "explanation"
+    },
+    {
+        "id": "sample-002",
+        "prompt": "Write a Python function that implements binary search on a sorted array. Include error handling and edge cases.",
+        "category": "coding"
+    },
+    {
+        "id": "sample-003",
+        "prompt": "Analyze the potential economic impacts of widespread adoption of autonomous vehicles over the next 20 years.",
+        "category": "analysis"
+    },
+    {
+        "id": "sample-004",
+        "prompt": "Draft a professional email declining a job offer while maintaining a positive relationship with the company.",
+        "category": "writing"
+    },
+    {
+        "id": "sample-005",
+        "prompt": "Compare and contrast the Mediterranean diet and the ketogenic diet in terms of health benefits, sustainability, and scientific evidence.",
+        "category": "comparison"
+    },
+    {
+        "id": "sample-006",
+        "prompt": "Explain quantum entanglement to a high school student using everyday analogies.",
+        "category": "explanation"
+    },
+    {
+        "id": "sample-007",
+        "prompt": "Design a database schema for a multi-tenant SaaS application that handles project management with teams, tasks, and permissions.",
+        "category": "technical"
+    },
+    {
+        "id": "sample-008",
+        "prompt": "What are the strongest arguments for and against universal basic income? Present both sides fairly.",
+        "category": "reasoning"
+    },
+    {
+        "id": "sample-009",
+        "prompt": "Write a short story (300-500 words) about a robot that discovers it can dream.",
+        "category": "creative"
+    },
+    {
+        "id": "sample-010",
+        "prompt": "Explain the CAP theorem in distributed systems and provide real-world examples of systems that prioritize different combinations.",
+        "category": "technical"
+    }
+]
