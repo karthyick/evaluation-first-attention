@@ -125,10 +125,10 @@ Strengths:
 ✓ Clear problem statement with 3 specific pain points
 ✓ Solution explanation with memorable TDD metaphor
 ✓ Two mechanisms well-explained with math + intuition
-✓ Quantified results (100% vs 80% APR with -FWRL ablation)
-✓ Ablations showing which components matter most
+✓ Quantified results (960 runs, 80 MT-Bench prompts, EFA: RAS=0.962, APR=96.2%, +25.0pp over single-pass, +3.7pp over best baselines)
+✓ Ablations showing which components matter most (Iteration -12.4pp, DynCriteria -7.4pp, CMPG -3.7pp, FWRL 0.0pp ceiling effect)
 ✓ Quick Start code that's copy-paste ready
-✓ Excellent cross-model evaluation choice
+✓ Excellent cross-model evaluation choice (MiniMax-M2.5 gen + Qwen-3.5-9B Ollama eval)
 ✓ Proper BibTeX citations
 ✓ Test section with actual pytest output
 ✓ Hyperparameter table with descriptions

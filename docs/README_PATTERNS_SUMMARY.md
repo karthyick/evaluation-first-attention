@@ -42,7 +42,7 @@
 | **Tree of Thoughts** | Deliberate Problem Solving with Large Language Models |
 | **vLLM** | Easy, fast, and cheap LLM serving for everyone. |
 | **DSPy** | The framework for programming—not prompting—language models |
-| **Your EFA** | Specification-Driven Generation via Dynamic Rubric Conditioning and Failure-Weighted Reattention |
+| **Your EFA** | Evaluation-First Generation: Specification-Driven LLM Output Quality via Dynamic Rubric Conditioning and Iterative Criteria Refinement |
 
 ### What Makes a Great One-Liner
 
@@ -418,8 +418,7 @@ project-name/
 | -Both | Mechanisms 1+2 | Drops 22% → 78% | Cumulative effect |
 | -Iteration | Refinement loop | Drops 20% → 80% | Critical to approach |
 
-**Conclusion**: FWRL (failure weighting) is the only ablation that produces < 100% APR,
-confirming its importance to preventing quality failures.
+**Conclusion**: Show which ablation drives the largest drop and interpret the result (including cases where a component shows no contribution, indicating a ceiling effect).
 ```
 
 ### What This Shows
@@ -574,8 +573,9 @@ Your current README is already **very strong** (estimated 85-90/110).
    - One clear image > 100 words
 
 3. **Expand "Key Findings"** section
-   - Add interpretation of each ablation
-   - Explain why FWRL matters most
+   - Add interpretation of each ablation result
+   - Note ceiling-effect findings (e.g., FWRL 0.0pp contribution — EFA-no-FWRL ties full EFA)
+   - Explain which components drive the largest gains (Iteration -12.4pp, DynCriteria -7.4pp)
 
 ### Optional Enhancements (15-30 minutes)
 

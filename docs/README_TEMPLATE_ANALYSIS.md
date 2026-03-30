@@ -186,7 +186,7 @@ before optimizing for secondary ones (e.g., style).
    - Scale of evaluation
 
    Example from your README:
-   > "55/55 runs completed across 11 methods (EFA + 6 baselines + 4 ablations) on 5 diverse prompts."
+   > "960/960 runs completed across 12 methods (EFA + 7 baselines + 4 ablations) on 80 MT-Bench prompts."
 
 2. **Key findings** (Bullet format, 3-5 points)
    - Most important discoveries
@@ -460,7 +460,7 @@ Example from Reflexion README:
 Example from your README:
 ```bibtex
 @article{mohan2026efa,
-  title={Evaluation-First Attention: Specification-Driven Generation via Dynamic Rubric Conditioning and Failure-Weighted Reattention},
+  title={Evaluation-First Generation: Specification-Driven LLM Output Quality via Dynamic Rubric Conditioning and Iterative Criteria Refinement},
   author={Mohan, Karthick Raja},
   year={2026},
   month={March}
@@ -783,7 +783,7 @@ python -m pytest tests/ -v
 | **Problem clarity** | If readers don't understand the gap, they won't care about the solution | Self-Refine: "Models generate without knowing what quality dimensions they must satisfy" |
 | **Quantitative proof early** | Abstract numbers don't convince; concrete comparisons do | vLLM: "24× higher throughput than HuggingFace" |
 | **Runnable example** | Users judge a project by "Can I try this in 5 minutes?" | Your EFA Quick Start is exemplary |
-| **Ablation results** | Shows which components actually matter (not just nice-to-haves) | Your -FWRL ablation proving 80% vs 100% APR |
+| **Ablation results** | Shows which components actually matter (not just nice-to-haves) | Your ablations: Iteration -12.4pp, DynCriteria -7.4pp, CMPG -3.7pp, FWRL 0.0pp (ceiling effect) |
 | **Cross-model evaluation** | Demonstrates awareness of self-preference bias | Your use of different eval model than generator |
 
 ---

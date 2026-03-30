@@ -287,10 +287,10 @@ Your EFA README is **estimated 85-90 / 110** (very strong):
 ✓ Clear problem statement with 3 specific pain points
 ✓ Solution explanation with memorable TDD metaphor
 ✓ Two mechanisms well-explained with math + intuition
-✓ Quantified results (100% vs 80% APR with -FWRL)
-✓ Ablations clearly showing which components matter
+✓ Quantified results (EFA: RAS=0.962, APR=96.2%, +25.0pp over single-pass, +3.7pp over best baselines)
+✓ Ablations clearly showing which components matter (Iteration -12.4pp, DynCriteria -7.4pp, CMPG -3.7pp)
 ✓ Quick Start code that's copy-paste ready
-✓ Excellent cross-model evaluation choice
+✓ Excellent cross-model evaluation choice (MiniMax-M2.5 gen + Qwen-3.5-9B Ollama eval)
 ✓ Proper citations and BibTeX format
 
 ### Quick Improvements (5-15 minutes each)
@@ -300,13 +300,13 @@ Your EFA README is **estimated 85-90 / 110** (very strong):
 - Makes your contribution clear
 
 **2. Add visual architecture diagram**
-- Shows: Query → Criteria Gen → Progressive Masking → FWRL → Response
+- Shows: Query → Criteria Gen → Progressive Masking → CMPG → Response
 - One clear image helps understanding
 
 **3. Expand "Key Findings" section**
-- Why FWRL is the critical component (proved by ablation)
-- Insight about dynamic vs fixed criteria
-- Benefit of cross-model evaluation
+- FWRL shows 0.0pp contribution at scale (ceiling effect: EFA-no-FWRL ties full EFA at APR=96.2%)
+- Insight about dynamic vs fixed criteria (-7.4pp without DynCriteria)
+- Benefit of cross-model evaluation (MiniMax-M2.5 gen + Qwen-3.5-9B Ollama eval)
 
 ---
 

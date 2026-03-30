@@ -12,7 +12,8 @@ EFA inverts the generate-then-evaluate paradigm by producing evaluation criteria
 
 ## News
 
-- **[2026-03-23]** First experiment results: 55/55 runs completed across 11 methods. FWRL ablation confirms contribution (only method with APR < 100%).
+- **[2026-03-30]** Full MT-Bench results: 960 runs (12 methods × 80 prompts) with cross-model evaluation (MiniMax-M2.5 gen + Qwen-3.5-9B eval). EFA achieves **96.2% APR**, +25pp over single-pass. Paper updated with results, figures, honest FWRL analysis.
+- **[2026-03-29]** Best-of-N baseline completed (80/80 prompts). All 12 methods now have full MT-Bench coverage.
 - **[2026-03-23]** Initial release: full pipeline, 7 baselines, 4 ablations, cross-model evaluation support, 11 unit tests.
 
 ---
@@ -89,19 +90,39 @@ w_i^(k+1) = w_i^(k) * (1 + α * max(0, τ - s_i^(k)))
 
 ## Experiment Results
 
-55/55 runs completed across 11 methods on 5 diverse prompts (explanation, coding, analysis, writing, comparison).
+960 runs completed: 12 methods × 80 MT-Bench prompts. Cross-model evaluation: MiniMax-M2.5 (generator) + Qwen-3.5-9B via Ollama (evaluator) — eliminates self-preference bias.
 
-![Experiment Results](docs/results_table.png)
+![APR Comparison](paper/figures/apr_comparison.png)
+
+### Main Results
+
+| Method | RAS ↑ | APR (%) ↑ | TTC ↓ |
+|--------|-------|-----------|-------|
+| Single-pass | 0.881 | 71.2 | 9,210 |
+| Rubric-then-Score | 0.863 | 72.5 | 9,469 |
+| All-Criteria-at-Once | 0.925 | 90.0 | 13,408 |
+| Uniform Reattention | 0.935 | 90.0 | 17,814 |
+| Best-of-5 | 0.957 | 91.2 | 21,999 |
+| Self-Refine | 0.953 | 92.5 | 13,652 |
+| FusioN | 0.956 | 92.5 | 15,449 |
+| **EFA (Full)** | **0.962** | **96.2** | **16,449** |
 
 ### Key Findings
 
-1. **FWRL is critical**: `EFA - FWRL` is the **only** method with APR < 100% (80%). Removing failure-weighted reattention causes the system to fail on prompts where uniform reweighting cannot recover from low-scoring criteria. Every other configuration achieves 100% APR.
+1. **EFA beats all 7 baselines on APR**: 96.2% vs best baseline 92.5% (+3.7pp). +25.0pp over single-pass generation.
 
-2. **CMPG reduces cost without sacrificing quality**: `EFA - CMPG` achieves RAS 0.987 with only 4,239 tokens (cheapest of all EFA variants), suggesting that all-criteria-at-once may be a viable low-cost alternative when budget matters.
+2. **Iteration is the biggest driver** (−12.4pp): Removing iterative refinement drops APR from 96.2% to 83.8%. Multi-pass generation with criterion-level feedback is essential.
 
-3. **Dynamic criteria provide marginal gains**: `EFA - DynCriteria` (fixed universal criteria) scores 0.987 vs full EFA's 0.940. Dynamic criteria's value likely increases on domain-specific prompts (not captured in this small benchmark).
+3. **Dynamic criteria matter** (−7.4pp): Replacing per-query criteria with a fixed universal set drops APR from 96.2% to 88.8%.
 
-4. **Self-evaluation bias is real**: Same-model evaluation inflates scores (most methods show RAS > 0.93). Cross-model evaluation is essential for meaningful differentiation.
+4. **CMPG provides measurable gains** (−3.7pp): Progressive masking over quality dimensions outperforms presenting all criteria simultaneously.
+
+5. **FWRL shows no measurable contribution** (0.0pp): Removing failure-weighted reattention yields identical APR (96.2%) and slightly higher RAS (0.967). We attribute this to a ceiling effect with a strong generator — the model fixes failing criteria even with uniform weights. This is honestly reported in the paper.
+
+6. **EFA is more token-efficient than brute-force**: 75% of Best-of-5's token cost with +5.0pp higher APR.
+
+![Ablation Study](paper/figures/ablation_waterfall.png)
+![Cost-Quality Tradeoff](paper/figures/cost_quality_scatter.png)
 
 ### Metrics
 
@@ -274,8 +295,8 @@ python -m pytest tests/ -v
 
 ```bibtex
 @article{mohan2026efa,
-  title={Evaluation-First Attention: Specification-Driven Generation
-         via Dynamic Rubric Conditioning and Failure-Weighted Reattention},
+  title={Evaluation-First Generation: Specification-Driven LLM Output Quality
+         via Dynamic Rubric Conditioning and Iterative Criteria Refinement},
   author={Mohan, Karthick Raja},
   year={2026},
   month={March}

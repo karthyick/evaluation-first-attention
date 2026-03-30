@@ -278,8 +278,8 @@ Optional: Reference **README_PATTERNS_SUMMARY.md** for pattern examples
 ✓ **Excellent**: Solution explanation with TDD metaphor (memorable)
 ✓ **Excellent**: Two mechanisms well-explained with math + intuition
 ✓ **Excellent**: Quick Start code (copy-paste ready, shows cross-model choice)
-✓ **Excellent**: Results quantified (55/55 runs, 100% vs 80% APR with -FWRL)
-✓ **Excellent**: Ablations clearly showing which components matter
+✓ **Excellent**: Results quantified (960 runs, 80 MT-Bench prompts, EFA: RAS=0.962, APR=96.2%, +25.0pp over single-pass, +3.7pp over best baselines Self-Refine/FusioN)
+✓ **Excellent**: Ablations clearly showing which components matter (Iteration -12.4pp, DynCriteria -7.4pp, CMPG -3.7pp, FWRL 0.0pp ceiling effect)
 ✓ **Excellent**: Hyperparameter table with descriptions
 ✓ **Excellent**: Tests section with actual pytest output
 ✓ **Excellent**: Proper citation format
@@ -298,14 +298,15 @@ Optional: Reference **README_PATTERNS_SUMMARY.md** for pattern examples
    ```
 
 2. **Add Visual Architecture Diagram** (One image, 400x300px)
-   - Shows: Query → Criteria Gen → Progressive Masking → FWRL Loop → Response
+   - Shows: Query → Criteria Gen → Progressive Masking → CMPG → Response
    - Caption explaining each stage
    - Include example flow for 1 query
 
 3. **Expand "Key Findings"** (3 bullet points → 5)
-   - Add interpretation of why FWRL matters most
-   - Add insight about dynamic vs fixed criteria
-   - Add note about cross-model evaluation benefit
+   - FWRL shows 0.0pp contribution (ceiling effect: EFA-no-FWRL RAS=0.967, APR=96.2%, ties full EFA)
+   - Iteration loop is the dominant component (-12.4pp without it)
+   - DynCriteria contributes meaningfully (-7.4pp without it)
+   - Note about cross-model evaluation benefit (MiniMax-M2.5 gen + Qwen-3.5-9B Ollama eval)
 
 ### Medium Enhancements (15-30 minutes)
 
