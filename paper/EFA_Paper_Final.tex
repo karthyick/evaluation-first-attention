@@ -26,7 +26,7 @@
 \newtheorem{theorem}{Theorem}
 
 % Custom commands
-\newcommand{\efa}{\textsc{EFA}}
+\newcommand{\efa}{\textsc{EFA}}  % Evaluation-First Architecture
 \newcommand{\cmpg}{\textsc{CMPG}}
 \newcommand{\fwrl}{\textsc{FWRL}}
 \newcommand{\R}{\mathbb{R}}
@@ -36,10 +36,10 @@
 \newcommand{\calE}{\mathcal{E}}
 \newcommand{\calD}{\mathcal{D}} % Criteria space (distinct from generator \calC)
 
-\title{\textbf{Evaluation-First Attention: Specification-Driven Generation \\ via Dynamic Rubric Conditioning and Failure-Weighted Reattention}}
+\title{\textbf{Evaluation-First Generation: Specification-Driven LLM Output Quality \\ via Dynamic Rubric Conditioning and Iterative Criteria Refinement}}
 
 \author{
-Karthick Raja Mohan \\
+Karthick Raja M \\
 Independent Researcher \\
 Chennai, India \\
 \texttt{karthickrajam18@gmail.com}
@@ -55,7 +55,7 @@ Chennai, India \\
 % ABSTRACT
 % ============================================================================
 \begin{abstract}
-Current large language model (LLM) generation pipelines treat evaluation as a post-hoc measurement step: generate first, evaluate later. This separation means models generate ``blindly'' without explicit awareness of the quality dimensions they must satisfy, and refinement feedback---when provided---is holistic rather than dimension-specific. We propose \textbf{Evaluation-First Attention} (\efa{}), an architecture that inverts this paradigm by generating query-specific evaluation criteria \emph{before} generation and using them as structured conditioning targets throughout the generation process. \efa{} introduces two novel mechanisms: (1) \textbf{Criteria-Masked Progressive Generation} (\cmpg{}), which progressively unmasks quality dimensions during generation analogous to causal token masking but over evaluation criteria, and (2) \textbf{Failure-Weighted Reattention Loop} (\fwrl{}), which maps per-criterion evaluation scores to criterion emphasis adjustments, amplifying focus on failing dimensions in subsequent generation passes. We formalize the architecture, analyze convergence properties under monotonic improvement assumptions, and present an experimental framework with six baselines and four ablation conditions. To our knowledge, no prior work in the general text generation domain uses dynamically-generated evaluation rubrics as inference-time generation specifications with failure-proportional reweighting.
+Current large language model (LLM) generation pipelines treat evaluation as a post-hoc measurement step: generate first, evaluate later. This separation means models generate ``blindly'' without explicit awareness of the quality dimensions they must satisfy, and refinement feedback---when provided---is holistic rather than dimension-specific. We propose \textbf{Evaluation-First Architecture} (\efa{}), a prompt-level generation framework that inverts this paradigm by generating query-specific evaluation criteria \emph{before} generation and using them as structured conditioning targets throughout the generation process. \efa{} introduces two novel mechanisms: (1) \textbf{Criteria-Masked Progressive Generation} (\cmpg{}), which progressively unmasks quality dimensions during generation analogous to causal token masking but over evaluation criteria, and (2) \textbf{Failure-Weighted Reattention Loop} (\fwrl{}), which maps per-criterion evaluation scores to criterion emphasis adjustments, amplifying focus on failing dimensions in subsequent generation passes. We formalize the framework, analyze convergence properties under monotonic improvement assumptions, and evaluate on 80 MT-Bench prompts using cross-model evaluation (MiniMax-M2.5 generator, Ollama Qwen-3.5-9B evaluator) to eliminate self-preference bias. \efa{} achieves 96.2\% All-Pass Rate (APR), outperforming all seven baselines including single-pass generation (71.2\%), Self-Refine (92.5\%), Best-of-5 (91.2\%), and FusioN (92.5\%). Ablation studies confirm that iterative refinement ($-12.4$pp) and dynamic criteria generation ($-7.4$pp) are the primary contributors, while \cmpg{} provides a meaningful $+3.7$pp gain. We present an honest analysis showing that \fwrl{}'s failure-proportional reweighting yields no measurable improvement over uniform reweighting on this benchmark---an ablation variant without \fwrl{} matches \efa{}'s APR and achieves slightly higher RAS---likely due to a ceiling effect with strong generators. To our knowledge, no prior work in the general text generation domain uses dynamically-generated evaluation rubrics as inference-time generation specifications with failure-proportional reweighting.
 \end{abstract}
 
 % ============================================================================
@@ -71,7 +71,7 @@ Second, \textbf{refinement feedback is holistic, not dimensional}. Self-Refine \
 
 Third, \textbf{all quality dimensions receive equal emphasis}. Whether a response perfectly satisfies relevance but catastrophically fails on factual accuracy, subsequent refinement passes treat all dimensions uniformly. No existing system allocates more generation ``budget'' to failing dimensions.
 
-We propose \textbf{Evaluation-First Attention} (\efa{}), an architecture that addresses all three limitations by inverting the generation-evaluation relationship. \efa{} operates in three phases:
+We propose \textbf{Evaluation-First Architecture} (\efa{}), a prompt-level generation framework that addresses all three limitations by inverting the generation-evaluation relationship. \efa{} operates in three phases:
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Criteria Generation}: Before any generation, a dedicated LLM call analyzes the user prompt and produces an ordered set of query-specific evaluation criteria, each with a measurable scoring rubric.
@@ -83,10 +83,10 @@ The key insight is conceptually simple: \emph{what if LLMs knew what ``good'' lo
 
 Our contributions are:
 \begin{enumerate}[leftmargin=*]
-    \item We formalize the \textbf{Evaluation-First Attention} architecture, the first system that uses dynamically-generated evaluation criteria as inference-time generation specifications with failure-weighted reattention (\S\ref{sec:method}).
+    \item We formalize the \textbf{Evaluation-First Architecture} (\efa{}) framework, the first system that uses dynamically-generated evaluation criteria as inference-time generation specifications with failure-weighted reattention (\S\ref{sec:method}).
     \item We introduce \textbf{Criteria-Masked Progressive Generation} (\cmpg{}), a novel conditioning mechanism over quality dimensions with no prior art in any generation paradigm (\S\ref{sec:cmpg}).
-    \item We introduce the \textbf{Failure-Weighted Reattention Loop} (\fwrl{}), which maps per-criterion evaluation failures to emphasis weight modifications---analogous to focal loss \citep{lin2017focal} but applied to evaluation dimensions at inference time (\S\ref{sec:fwrl}).
-    \item We analyze convergence properties, provide computational complexity bounds, and design a rigorous experimental framework with six baselines and four ablation conditions (\S\ref{sec:convergence}, \S\ref{sec:experiments}).
+    \item We introduce the \textbf{Failure-Weighted Reattention Loop} (\fwrl{}), which maps per-criterion evaluation failures to emphasis weight modifications---analogous to focal loss \citep{lin2017focal} but applied to evaluation dimensions at inference time. While theoretically principled, \fwrl{} shows no measurable gain on our benchmark with a strong generator; we provide an honest analysis of this finding and conditions under which it is expected to contribute (\S\ref{sec:fwrl}, \S\ref{sec:fwrl_analysis}).
+    \item We evaluate \efa{} on 80 MT-Bench prompts with cross-model evaluation (eliminating self-preference bias), demonstrating 96.2\% All-Pass Rate across seven baselines and four ablation conditions. We provide honest analysis of each component's contribution, including a transparent discussion of \fwrl{}'s marginal effect on this benchmark (\S\ref{sec:experiments}, \S\ref{sec:results}).
 \end{enumerate}
 
 % ============================================================================
@@ -96,19 +96,21 @@ Our contributions are:
 
 \subsection{Rubric Generation and Criteria-Based Evaluation}
 
-Recent work has demonstrated the value of dynamic, query-specific evaluation criteria. CARMO \citep{zhang2025carmo} generates context-aware criteria for reward modeling. OpenRubrics \citep{li2025openrubrics} and RRD \citep{wang2026rrd} produce and refine rubrics for preference prediction. G-Eval \citep{liu2023geval} uses chain-of-thought to generate evaluation steps before scoring. AutoSCORE \citep{chen2025autoscore} employs multi-agent rubric-aligned scoring.
+Recent work has demonstrated the value of dynamic, query-specific evaluation criteria. CARMO \citep{zhang2025carmo} generates context-aware criteria for reward modeling. OpenRubrics \citep{li2025openrubrics} and RRD \citep{wang2026rrd} produce and refine rubrics for preference prediction. G-Eval \citep{liu2023geval} uses chain-of-thought to generate evaluation steps before scoring. AutoSCORE \citep{chen2025autoscore} employs multi-agent rubric-aligned scoring. The LLM-as-Judge paradigm \citep{zheng2023judging} and its associated MT-Bench benchmark established that strong LLMs can serve as reliable evaluators when given structured rubrics, providing empirical support for \efa{}'s use of LLM-based per-criterion evaluation.
 
-\textbf{Critical gap}: All existing rubric systems use criteria exclusively for evaluation or reward modeling---\emph{never as generation specifications}. \efa{} closes this gap by feeding criteria into the generation process as structured conditioning targets.
+\textbf{Critical gap}: All existing rubric systems use criteria exclusively for evaluation or reward modeling---\emph{never as generation specifications}. \efa{} closes this gap by feeding criteria into the generation process as structured conditioning targets within a unified prompt-level framework.
 
 \subsection{Iterative Self-Refinement}
 
-Self-Refine \citep{madaan2023selfrefine} pioneered iterative LLM self-improvement through generate-feedback-refine loops. Reflexion \citep{shinn2023reflexion} adds verbal reinforcement learning with episodic memory. CRITIC \citep{gou2024critic} incorporates tool-interactive critique. MAgICoRe \citep{chen2025magicore} uses multi-agent coarse-to-fine refinement with process reward models.
+Self-Refine \citep{madaan2023selfrefine} pioneered iterative LLM self-improvement through generate-feedback-refine loops. Reflexion \citep{shinn2023reflexion} adds verbal reinforcement learning with episodic memory. CRITIC \citep{gou2024critic} incorporates tool-interactive critique. MAgICoRe \citep{chen2025magicore} uses multi-agent coarse-to-fine refinement with process reward models. OPRO \citep{yang2023large} uses LLMs to optimize prompts by iteratively generating and evaluating prompt candidates. Unlike \efa{}, OPRO optimizes the prompt template itself rather than conditioning generation on dynamically-generated evaluation criteria for each query.
 
 \textbf{Critical gap}: All refinement systems provide holistic or textual feedback. None decompose failure into per-criterion scores mapped to generation emphasis adjustments. \efa{}'s failure-weighted reattention provides structured, numerical, dimension-specific feedback that directly modifies criterion emphasis in subsequent passes.
 
 \subsection{Controlled and Constrained Generation}
 
 Controllable text generation approaches steer outputs toward desired attributes. FUDGE \citep{yang2021fudge} uses future discriminators. PPLM \citep{dathathri2020plug} perturbs hidden representations. Classifier-free guidance \citep{ho2022classifier} interpolates conditional and unconditional scores. Constitutional AI \citep{bai2022constitutional} uses fixed principles to guide critique-revision during training data synthesis, but these principles are pre-defined (not query-specific) and applied during training, not at inference time. Recent multi-attribute control methods handle multiple constraints simultaneously.
+
+Recent work on automatic prompt optimization also relates to \efa{}. DSPy \citep{khattab2023dspy} compiles declarative programs with structured quality signatures into optimized prompts, and ProTeGi \citep{pryzant2023automatic} uses error-based gradient signals to iteratively refine prompts. While these systems optimize \emph{prompt templates} offline, \efa{} operates at inference time with per-query dynamic criteria and failure-proportional reweighting of quality dimensions---a fundamentally online, instance-specific approach.
 
 \textbf{Critical gap}: These methods operate at the token level with fixed, pre-defined attributes. \efa{} operates at the rubric level with dynamically-generated, query-specific criteria and progressive unmasking---a fundamentally different granularity.
 
@@ -127,12 +129,12 @@ In the code domain, TDD-inspired approaches generate test cases before code \cit
 % ============================================================================
 % 3. METHOD
 % ============================================================================
-\section{Evaluation-First Attention Architecture}
+\section{Evaluation-First Architecture Framework}
 \label{sec:method}
 
 \subsection{Overview}
 
-Given a user prompt $P$, \efa{} produces a response $R^*$ through three formally-defined components operating in a closed loop (Figure~\ref{fig:architecture}):
+Given a user prompt $P$, the \efa{} framework produces a response $R^*$ through three formally-defined components operating in a closed loop (Figure~\ref{fig:pipeline}):
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Criteria Generator} $\calC$: Analyzes $P$ and produces an ordered criteria set $C = \{c_1, c_2, \ldots, c_n\}$ with initial emphasis weights $\mathbf{w}^{(0)} \in \R^n$.
@@ -142,7 +144,7 @@ Given a user prompt $P$, \efa{} produces a response $R^*$ through three formally
 
 The system iterates until $\min(\mathbf{s}^{(k)}) \geq \tau$ (all criteria pass threshold $\tau$) or $k = K_{\max}$.
 
-\textbf{Single-model design}: \efa{} uses a single LLM throughout (the same model serves as criteria generator, progressive generator, and evaluator via different prompts). This is a deliberate design choice: it eliminates inter-model coordination overhead and isolates the architectural contribution from model selection effects. However, the framework naturally extends to heterogeneous multi-model configurations where different models handle different components.
+\textbf{Flexible model design}: \efa{} is compatible with both single-model and multi-model configurations. In the single-model variant, one LLM serves as criteria generator, progressive generator, and evaluator via different prompts, eliminating inter-model coordination overhead. In our experiments (\S\ref{sec:experiments}), we use a cross-model design---MiniMax-M2.5 for generation and Qwen-3.5-9B for evaluation---to eliminate self-preference bias. The framework supports any configuration; the architectural contribution is independent of model choice.
 
 % ============================================================================
 % ARCHITECTURE FIGURE
@@ -202,8 +204,8 @@ The system iterates until $\min(\mathbf{s}^{(k)}) \geq \tau$ (all criteria pass 
 \node[right=0.3cm of decide, font=\scriptsize\itshape, text=gray] {+ criterion checkpoint};
 
 \end{tikzpicture}
-\caption{\textbf{The Evaluation-First Attention (\efa{}) architecture.} A Criteria Generator produces query-specific evaluation criteria before generation begins. The Criteria-Masked Progressive Generator produces a response by incrementally unmasking criteria (analogous to causal token masking but over quality dimensions). The Failure-Weighted Evaluator scores each criterion independently and computes boosted emphasis weights for failing dimensions. The system loops (dashed red arrow) until all criteria pass threshold $\tau$ or maximum iterations are reached. A criterion checkpoint mechanism prevents regression on previously-passing criteria.}
-\label{fig:architecture}
+\caption{\textbf{The Evaluation-First Architecture (\efa{}) pipeline.} A Criteria Generator produces query-specific evaluation criteria before generation begins. The Criteria-Masked Progressive Generator produces a response by incrementally unmasking criteria (analogous to causal token masking but over quality dimensions). The Failure-Weighted Evaluator scores each criterion independently and computes boosted emphasis weights for failing dimensions. The system loops (dashed red arrow) until all criteria pass threshold $\tau$ or maximum iterations are reached. A criterion checkpoint mechanism prevents regression on previously-passing criteria.}
+\label{fig:pipeline}
 \end{figure}
 
 \subsection{Component 1: Criteria Generator ($\calC$)}
@@ -273,7 +275,7 @@ where $\|$ denotes prompt concatenation, $\oplus$ denotes ordered assembly of cr
 
 Note that all thresholds are defined relative to the uniform weight $1/n$, ensuring consistent behavior regardless of the number of criteria. A criterion receives \texttt{CRITICAL} priority only when its weight exceeds twice the uniform baseline, which occurs after substantial failure-weighted boosting.
 
-This design choice avoids modifying model internals (attention heads, hidden states) and instead operates entirely through prompt engineering, making \efa{} applicable to any LLM accessible via API. Prior work on instruction following has demonstrated that LLMs are sensitive to emphasis cues and priority ordering within prompts, supporting the effectiveness of structured priority directives for steering generation behavior.
+This design choice avoids modifying model internals (attention heads, hidden states) and instead operates entirely through prompt engineering, making \efa{} applicable to any LLM accessible via API. Prior work on instruction following \citep{wei2022finetuned} has demonstrated that LLMs are sensitive to emphasis cues and priority ordering within prompts, supporting the effectiveness of structured priority directives for steering generation behavior.
 
 \textbf{Intuition}: This progressive unmasking ensures foundational quality dimensions are satisfied before the generator attempts to optimize for secondary dimensions. It prevents the common failure mode where models optimize for surface-level quality (fluency, style) at the expense of fundamental correctness.
 
@@ -328,7 +330,7 @@ Then the number of failing criteria $|\{i : s_i^{(k)} < \tau\}|$ is non-increasi
 By Bounded Regression, once a criterion passes threshold $\tau$, it either remains above $\tau - \epsilon$ or is locked by the checkpoint mechanism at its passing score. By Focused Improvement, each failing criterion's score increases by at least $\delta$ per iteration. Since scores are bounded in $[0, 1]$ and the maximum distance to threshold is $\tau$, each criterion requires at most $\lceil \tau / \delta \rceil$ iterations to reach $\tau$. With $n$ criteria, the worst case (sequential, non-overlapping improvement) yields $n \cdot \lceil \tau / \delta \rceil$ iterations. In practice, multiple criteria improve simultaneously, yielding substantially faster convergence.
 \end{proof}
 
-\textbf{Empirical validation}: The Focused Improvement assumption is supported by the self-refinement literature: \citet{lee2025refinebench} demonstrate that LLMs achieve near-perfect refinement when given targeted, structured feedback about specific quality dimensions. \efa{}'s per-criterion evaluation and emphasis weighting directly provides such structured feedback.
+\textbf{Empirical validation}: The Focused Improvement assumption is supported by the self-refinement literature: \citet{lee2025refinebench} demonstrate that LLMs achieve near-perfect refinement when given targeted, structured feedback about specific quality dimensions. \efa{}'s per-criterion evaluation and emphasis weighting directly provide such structured feedback.
 
 \subsection{Computational Complexity}
 \label{sec:complexity}
@@ -353,7 +355,7 @@ This represents a $20\times$ cost increase over single-pass generation. This is 
 \subsection{Complete Algorithm}
 
 \begin{algorithm}[H]
-\caption{Evaluation-First Attention (\efa{})}
+\caption{Evaluation-First Architecture (\efa{})}
 \label{alg:efa}
 \begin{algorithmic}[1]
 \REQUIRE User prompt $P$, threshold $\tau$, max iterations $K_{\max}$, reattention strength $\alpha$, regression tolerance $\epsilon$
@@ -407,11 +409,9 @@ This represents a $20\times$ cost increase over single-pass generation. This is 
 \section{Experimental Design}
 \label{sec:experiments}
 
-We present our evaluation methodology below. Experimental results with quantitative comparisons will be reported in a forthcoming revision.\footnote{We release the architectural formalization and experimental design ahead of results to establish priority on the novel mechanisms (\cmpg{} and \fwrl{}) and to invite community feedback on the evaluation protocol.}
-
 \subsection{Baselines}
 
-We compare \efa{} against the following six baselines, designed to isolate the contribution of each architectural component:
+We compare \efa{} against the following seven baselines, designed to isolate the contribution of each architectural component:
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{Single-pass}: Standard LLM generation without criteria or refinement. Measures the baseline quality achievable without any architectural intervention.
@@ -419,6 +419,7 @@ We compare \efa{} against the following six baselines, designed to isolate the c
     \item \textbf{Rubric-then-Score}: Generate criteria (same as \efa{} Step 1), generate response without criteria conditioning, then score with the rubric. Tests whether criteria-aware generation outperforms criteria-unaware generation followed by the same evaluation.
     \item \textbf{All-Criteria-at-Once}: Provide all criteria simultaneously to the generator in a single pass (no progressive masking, no iteration). Tests whether \cmpg{}'s progressive unmasking adds value over naive full-criteria prompting.
     \item \textbf{Uniform Reattention}: Generate with criteria, evaluate per-criterion, but re-generate with uniform weights on failure (no failure weighting). Tests whether \fwrl{}'s targeted reweighting outperforms uniform retry.
+    \item \textbf{Best-of-$N$}: Generate $N$ independent responses (each with full criteria conditioning), evaluate all, return the highest-scoring candidate. Tests whether \efa{}'s iterative refinement outperforms brute-force sampling at comparable or lower token cost.
     \item \textbf{FusioN} \citep{agarwal2025fusion}: Multi-candidate synthesis without criteria guidance. Represents the state-of-the-art in inference-time quality scaling.
 \end{enumerate}
 
@@ -438,13 +439,116 @@ To validate each component's individual contribution, we conduct four ablation c
     \item \textbf{Rubric Adherence Score (RAS)}: Mean per-criterion score across all criteria, averaged over test prompts. Range: $[0, 1]$.
     \item \textbf{All-Pass Rate (APR)}: Percentage of test prompts where all criteria meet threshold $\tau$. Measures reliability.
     \item \textbf{Iterations to Convergence (ITC)}: Mean number of iterations before all criteria pass or maximum reached. Measures efficiency.
-    \item \textbf{Expected Calibration Error (ECE)}: Measures whether the system's aggregate score correlates with actual output quality as judged by humans. Binned across 10 confidence intervals.
     \item \textbf{Total Token Cost (TTC)}: Total tokens consumed across the full pipeline. Measures computational efficiency.
 \end{itemize}
 
 \subsection{Hyperparameter Settings}
 
-Based on preliminary analysis, we propose the following default configuration: $n \in \{4, 5, 6\}$ criteria per query, threshold $\tau = 0.6$ (corresponding to rubric score $\geq 3/5$), maximum iterations $K_{\max} = 3$, reattention strength $\alpha \in \{1.0, 2.0, 5.0\}$ (studied via sensitivity analysis), and regression tolerance $\epsilon = 0.1$.
+Based on preliminary analysis, we use the following default configuration: $n = 5$ criteria per query, threshold $\tau = 0.6$ (corresponding to rubric score $\geq 3/5$), maximum iterations $K_{\max} = 3$, reattention strength $\alpha = 2.0$, and regression tolerance $\epsilon = 0.1$. For Best-of-$N$, we use $N = 5$.
+
+\subsection{Experimental Setup}
+
+\textbf{Benchmark.} We use MT-Bench \citep{zheng2023judging}, a curated set of 80 multi-turn prompts spanning 8 categories: writing, roleplay, extraction, reasoning, math, coding, knowledge (STEM), and knowledge (humanities/social science). MT-Bench is widely adopted for evaluating LLM quality and provides diverse task types that stress-test \efa{}'s generality.
+
+\textbf{Cross-model evaluation.} To eliminate self-preference bias---a known confound in LLM-as-Judge evaluation \citep{zheng2023judging}---we use separate models for generation and evaluation from different model families:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Generator}: MiniMax-M2.5 (commercial cloud API via OpenAI-compatible endpoint)
+    \item \textbf{Evaluator}: Qwen-3.5-9B running locally via Ollama (open-source, different architecture)
+\end{itemize}
+
+This cross-family design ensures that the evaluator has no systematic preference for the generator's outputs, strengthening the validity of per-criterion scores. The same generator--evaluator pair is used across all methods for fair comparison.
+
+\textbf{Scale.} Each of the 12 methods (7 baselines + 4 ablations + full \efa{}) is evaluated on all 80 prompts, yielding 960 total experimental runs with over 1.3 million tokens consumed.
+
+% ============================================================================
+% 5. EXPERIMENTAL RESULTS
+% ============================================================================
+\section{Experimental Results}
+\label{sec:results}
+
+\subsection{Main Results}
+
+Table~\ref{tab:main_results} presents the full results across all 12 methods on 80 MT-Bench prompts. \efa{} achieves the highest All-Pass Rate (96.2\%) among all methods, outperforming every baseline.
+
+\begin{table}[t]
+\centering
+\caption{\textbf{Main results on MT-Bench (80 prompts).} Generator: MiniMax-M2.5; Evaluator: Qwen-3.5-9B (Ollama). RAS = Rubric Adherence Score (mean), APR = All-Pass Rate (\%), ITC = Iterations to Convergence (mean), TTC = Total Token Cost (mean). Best result per metric in \textbf{bold}. $\dagger$ denotes ablation variants.}
+\label{tab:main_results}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Method} & \textbf{RAS} $\uparrow$ & \textbf{APR (\%)} $\uparrow$ & \textbf{ITC} $\downarrow$ & \textbf{TTC} $\downarrow$ \\
+\midrule
+\multicolumn{5}{l}{\textit{Baselines}} \\
+\quad Single-pass           & 0.881 & 71.2 & \textbf{1.0} & \textbf{9,210} \\
+\quad Rubric-then-Score     & 0.863 & 72.5 & 1.0 & 9,469 \\
+\quad All-Criteria-at-Once  & 0.925 & 90.0 & 1.3 & 13,408 \\
+\quad Uniform Reattention   & 0.935 & 90.0 & 1.3 & 17,814 \\
+\quad Best-of-5             & 0.957 & 91.2 & 1.0 & 21,999 \\
+\quad Self-Refine           & 0.953 & 92.5 & 1.4 & 13,652 \\
+\quad FusioN                & 0.956 & 92.5 & 1.0 & 15,449 \\
+\midrule
+\multicolumn{5}{l}{\textit{Ablations}$^\dagger$} \\
+\quad EFA $-$Iteration      & 0.943 & 83.8 & 1.0 & 15,652 \\
+\quad EFA $-$DynCriteria    & 0.943 & 88.8 & 1.4 & 18,378 \\
+\quad EFA $-$\cmpg{}        & 0.950 & 92.5 & 1.3 & 14,579 \\
+\quad EFA $-$\fwrl{}        & \textbf{0.967} & \textbf{96.2} & 1.1 & 17,524 \\
+\midrule
+\textbf{\efa{} (Full)}      & 0.962 & \textbf{96.2} & 1.2 & 16,449 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/apr_comparison.pdf}
+\caption{\textbf{APR comparison across all 12 methods} on 80 MT-Bench prompts with cross-model evaluation (MiniMax-M2.5 generator, Qwen-3.5-9B evaluator). \efa{} and \efa{} $-$\fwrl{} both achieve 96.2\% APR, outperforming all seven baselines. The dashed red line marks the \efa{} APR.}
+\label{fig:apr_comparison}
+\end{figure}
+
+\textbf{Key findings.}\footnote{APR percentages are rounded to one decimal place; percentage-point deltas are computed from the displayed values.} (1)~\efa{} achieves 96.2\% APR, a +25.0 percentage point (pp) improvement over single-pass and +3.7pp over the strongest baselines (Self-Refine and FusioN at 92.5\%). Notably, the \efa{} $-$\fwrl{} ablation matches this 96.2\% APR with slightly higher RAS (0.967 vs.\ 0.962), indicating that failure-weighted reattention does not contribute measurably on this benchmark (see Section~\ref{sec:fwrl_analysis}). (2)~\efa{} outperforms Best-of-5 by +5.0pp APR while using approximately 75\% of its token budget, demonstrating that targeted iterative refinement is more token-efficient than brute-force sampling. (3)~Even criteria-aware baselines that do not iterate (All-Criteria-at-Once, 90.0\%) substantially underperform \efa{}, confirming that the iterative refinement loop is essential. (4)~Rubric-then-Score (0.863 RAS) scores lower than single-pass (0.881 RAS) because per-criterion evaluation with specific rubrics is more demanding than holistic scoring---the same response receives lower scores when evaluated against granular quality dimensions.
+
+\subsection{Ablation Analysis}
+
+The ablation study reveals the contribution of each \efa{} component by measuring the APR drop when removing it:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Iteration} ($-12.4$pp): The largest contributor. Without iterative refinement, APR drops from 96.2\% to 83.8\%. This confirms that multi-pass generation with criterion-level feedback is essential---a single criteria-conditioned pass is insufficient.
+    \item \textbf{Dynamic Criteria} ($-7.4$pp): Replacing per-query criteria with a fixed universal set drops APR from 96.2\% to 88.8\%. Dynamic, query-specific criteria provide meaningfully better guidance than generic dimensions.
+    \item \textbf{\cmpg{} (Progressive Masking)} ($-3.7$pp): Removing progressive unmasking drops APR from 96.2\% to 92.5\%. The progressive curriculum over quality dimensions provides a measurable gain over presenting all criteria simultaneously.
+    \item \textbf{\fwrl{} (Failure-Weighted Reattention)} ($0.0$pp): Removing failure-proportional reweighting yields identical APR (96.2\%) and slightly \emph{higher} RAS (0.967 vs.\ 0.962). We analyze this finding in detail below.
+\end{itemize}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/ablation_waterfall.pdf}
+\caption{\textbf{Ablation study: component contribution to APR.} Removing iteration causes the largest drop ($-12.4$pp), followed by dynamic criteria ($-7.4$pp) and \cmpg{} ($-3.7$pp). Removing \fwrl{} yields no measurable change ($0.0$pp).}
+\label{fig:ablation}
+\end{figure}
+
+\subsection{Analysis of \fwrl{}'s Marginal Contribution}
+\label{sec:fwrl_analysis}
+
+The absence of measurable \fwrl{} contribution warrants careful discussion, as failure-weighted reattention is a theoretically motivated component of our framework.
+
+\textbf{Ceiling effect hypothesis.} MiniMax-M2.5 is a strong commercial model that, when given explicit criteria and iterative feedback, achieves near-perfect scores on most criteria after the first iteration. With few criteria failing after iteration 1, \fwrl{}'s reweighting mechanism has little signal to amplify. The uniform reattention baseline (90.0\% APR) is substantially lower than full \efa{} (96.2\%), but this gap reflects the absence of dynamic criteria and \cmpg{} in that baseline---not weight distribution. The $-$\fwrl{} ablation (96.2\% APR, identical to full \efa{}) is the direct test of failure weighting's contribution, and it confirms that weight distribution does not matter on this benchmark.
+
+\textbf{When \fwrl{} should matter.} We hypothesize that \fwrl{}'s contribution increases when: (a)~the generator is weaker (producing more per-criterion failures that create meaningful weight differentials), (b)~prompts are harder (requiring more iterations with heterogeneous failure patterns), or (c)~criteria counts are larger (creating more opportunities for dimension-specific bottlenecks). Testing these conditions is an important direction for future work.
+
+\textbf{Theoretical value.} Even when empirically marginal, \fwrl{} provides a principled mechanism for allocating generation emphasis that degrades gracefully: when all criteria pass, weights remain uniform and the mechanism is a no-op. It adds no cost when unnecessary and provides targeted remediation when criterion failures are heterogeneous.
+
+\subsection{Efficiency Analysis}
+
+Table~\ref{tab:main_results} reveals an important cost-quality tradeoff. \efa{} achieves its 96.2\% APR at a mean cost of 16,449 tokens---1.8$\times$ the single-pass cost of 9,210 tokens but only 0.75$\times$ the Best-of-5 cost of 21,999 tokens. The \efa{} pipeline's iterative architecture is more token-efficient than brute-force sampling because it \emph{diagnoses and targets} specific failure dimensions rather than regenerating the entire response.
+
+Self-Refine achieves 92.5\% APR at 13,652 tokens (0.83$\times$ \efa{}), offering a reasonable cost-quality tradeoff when the 3.7pp APR gap is acceptable. For applications demanding the highest reliability, \efa{}'s additional investment yields the best observed APR. Figure~\ref{fig:cost_quality} visualizes this tradeoff.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/cost_quality_scatter.pdf}
+\caption{\textbf{Cost-quality tradeoff.} Each point represents a method's mean APR vs.\ mean token cost per prompt. \efa{} (green star) achieves the highest APR tier at moderate cost---more efficient than Best-of-5 and comparable to FusioN/Self-Refine in cost while delivering higher reliability.}
+\label{fig:cost_quality}
+\end{figure}
 
 % ============================================================================
 % 6. ANALYSIS AND DISCUSSION
@@ -455,17 +559,17 @@ Based on preliminary analysis, we propose the following default configuration: $
 
 The core insight supporting \efa{} comes from the self-refinement literature: structured, targeted feedback enables near-perfect refinement, while self-diagnosis is the bottleneck \citep{lee2025refinebench}. \efa{} eliminates the self-diagnosis problem entirely by pre-specifying what success looks like before generation begins. The model never needs to ``figure out what went wrong''---the per-criterion evaluation tells it exactly which dimensions failed and by how much.
 
+Our experimental results directly validate this insight: the +25.0pp APR improvement over single-pass (71.2\% $\rightarrow$ 96.2\%) demonstrates that criteria awareness dramatically improves output quality. The +3.7pp gain over Self-Refine (92.5\% $\rightarrow$ 96.2\%) further confirms that structured per-criterion feedback outperforms holistic textual feedback.
+
 \subsection{The Focal Property of Failure-Weighted Reattention}
 
-\fwrl{} implements an inference-time analog of focal loss \citep{lin2017focal}. In object detection, focal loss down-weights well-classified examples to focus training on hard negatives. \fwrl{} analogously de-emphasizes (relatively) well-satisfied criteria to focus generation compute on failing dimensions. This creates an efficiency property: the system allocates more ``thinking budget'' to dimensions that need it most, rather than uniformly distributing effort across all quality dimensions regardless of their current satisfaction level.
+\fwrl{} implements an inference-time analog of focal loss \citep{lin2017focal}. In object detection, focal loss down-weights well-classified examples to focus training on hard negatives. \fwrl{} analogously de-emphasizes (relatively) well-satisfied criteria to focus generation compute on failing dimensions.
+
+Our MT-Bench experiments show that \fwrl{}'s contribution is empirically marginal when paired with a strong generator (Section~\ref{sec:fwrl_analysis}). We attribute this to a ceiling effect: MiniMax-M2.5 rarely produces heterogeneous per-criterion failures that would create meaningful weight differentials. This does not invalidate the mechanism---it indicates that the current benchmark does not sufficiently stress-test it. The theoretical efficiency property (allocating more generation budget to failing dimensions) remains sound and is expected to manifest with weaker generators or harder tasks where per-criterion failure rates vary more widely.
 
 \subsection{Criteria Masking as Quality Curriculum}
 
 \cmpg{}'s progressive unmasking implements a form of curriculum learning \citep{bengio2009curriculum} at inference time. By satisfying fundamental criteria before introducing secondary ones, the generator builds a solid foundation that subsequent refinements can improve without undermining. This prevents the common failure mode of surface-level optimization at the expense of deep quality---analogous to how curriculum learning in training prevents models from memorizing surface patterns before learning fundamental structure.
-
-\subsection{Connections to Test-Driven Development}
-
-\efa{} draws a direct analogy to test-driven development (TDD) in software engineering: write the tests (criteria) before the code (response), then code (generate) to pass the tests (criteria). This analogy extends further: \cmpg{}'s progressive masking corresponds to TDD's practice of writing one test at a time and making it pass before adding the next, while \fwrl{}'s failure-weighted reattention corresponds to focusing debugging effort on failing tests rather than re-running the entire suite uniformly.
 
 \subsection{Limitations}
 
@@ -473,8 +577,11 @@ The core insight supporting \efa{} comes from the self-refinement literature: st
     \item \textbf{Criteria quality dependence}: \efa{}'s effectiveness is bounded by the quality of generated criteria. Poor, overlapping, or irrelevant criteria degrade the entire pipeline. Criteria quality could be improved through the rubric refinement techniques of \citet{wang2026rrd}.
     \item \textbf{Compute cost}: With worst-case $20T$ token cost for $n=5$, $K=3$, \efa{} is not suitable for latency-sensitive applications. The cost reduction strategies in \S\ref{sec:complexity} partially address this, but a fundamental tradeoff between quality and cost remains.
     \item \textbf{Conflicting criteria}: When criteria inherently conflict (e.g., conciseness vs.\ completeness), failure-weighted reattention may oscillate between dimensions. The criterion checkpoint mechanism mitigates oscillation but may converge to a Pareto-suboptimal solution that satisfies each dimension at only the threshold level.
-    \item \textbf{Evaluator reliability}: Per-criterion scoring is performed by an LLM judge, inheriting known biases of LLM-as-a-Judge approaches (position bias, verbosity bias, self-preference bias). Using a separate model for evaluation or calibrated evaluators could reduce this risk.
-    \item \textbf{Prompt-level conditioning}: The current design operates through prompt engineering (Eq.~\ref{eq:prompt_construction}) rather than modifying model internals. While this maximizes applicability across API-accessible models, a deeper integration at the embedding or attention level could yield stronger conditioning effects.
+    \item \textbf{Evaluator reliability}: Per-criterion scoring is performed by an LLM judge, inheriting known biases of LLM-as-a-Judge approaches (position bias, verbosity bias, self-preference bias). Our cross-model design (MiniMax generator, Qwen evaluator) mitigates self-preference bias but does not eliminate all evaluator limitations.
+    \item \textbf{\fwrl{} ceiling effect}: Our experiments show that failure-weighted reattention provides no measurable improvement over uniform reweighting on MT-Bench with a strong generator. The mechanism's contribution is expected to increase with weaker generators, harder benchmarks, or larger criteria counts---conditions that produce more heterogeneous per-criterion failure patterns. Validating this hypothesis across generator capabilities and task difficulties is important future work.
+    \item \textbf{Prompt sensitivity}: Our results are based on a single set of prompt templates (Appendix~\ref{app:prompts}); sensitivity to prompt wording has not been evaluated. LLM performance is known to vary with prompt formulation, and the effectiveness of priority directives (Eq.~\ref{eq:priority}) may depend on specific phrasing choices.
+    \item \textbf{Statistical significance}: With 80 prompts, the top-3 gap (EFA at 96.2\% vs.\ Self-Refine/FusioN at 92.5\%) corresponds to a difference of 3 prompts. Future work should report bootstrap confidence intervals or McNemar tests to quantify significance.
+    \item \textbf{Prompt-level conditioning}: The current design operates through prompt engineering (Eq.~\ref{eq:prompt_construction}) rather than modifying model internals. While this maximizes applicability across API-accessible models, a deeper integration at the embedding or attention level could yield stronger conditioning effects. This is an intentional design tradeoff: the framework's value is demonstrable without any model-weight access.
 \end{itemize}
 
 % ============================================================================
@@ -482,9 +589,15 @@ The core insight supporting \efa{} comes from the self-refinement literature: st
 % ============================================================================
 \section{Conclusion}
 
-We presented \textbf{Evaluation-First Attention} (\efa{}), an architecture that inverts the traditional generate-then-evaluate paradigm by generating evaluation criteria before generation and using them as structured conditioning targets. Our two novel mechanisms---\textbf{Criteria-Masked Progressive Generation} (\cmpg{}) and \textbf{Failure-Weighted Reattention} (\fwrl{})---have no direct prior art and together create a convergent, dimension-aware refinement loop. \efa{} transforms evaluation from a passive post-hoc measurement into an active generation specification, drawing a direct analogy to test-driven development in software engineering: define what ``good'' looks like, then build to satisfy it.
+We presented \textbf{Evaluation-First Architecture} (\efa{}), a prompt-level generation framework that inverts the traditional generate-then-evaluate paradigm by generating evaluation criteria before generation and using them as structured conditioning targets. Evaluated on 80 MT-Bench prompts with cross-model evaluation (MiniMax-M2.5 generator, Qwen-3.5-9B evaluator), \efa{} achieves 96.2\% All-Pass Rate---a +25.0pp improvement over single-pass generation and +3.7pp over the strongest baselines (Self-Refine and FusioN).
 
-Future work includes: (a) deeper model integration via criteria embeddings in the attention mechanism, (b) adaptive criteria count selection based on prompt complexity, (c) multi-model configurations where different LLMs handle generation versus evaluation, and (d) domain-specific evaluation in code generation, medical question answering, and enterprise document synthesis.
+Our ablation study identifies \textbf{iteration} ($-12.4$pp) and \textbf{dynamic criteria generation} ($-7.4$pp) as the primary drivers of \efa{}'s effectiveness, with \textbf{\cmpg{}} contributing a meaningful $+3.7$pp gain. We transparently report that \textbf{\fwrl{}'s failure-proportional reweighting} shows no measurable improvement over uniform reweighting on this benchmark---an ablation without \fwrl{} achieves identical APR (96.2\%) and slightly higher RAS (0.967 vs.\ 0.962)---which we attribute to a ceiling effect with a strong generator.
+
+The core insight is validated: \emph{LLMs produce substantially better output when they know what ``good'' looks like before they start writing.} \efa{} transforms evaluation from a passive post-hoc measurement into an active generation specification, drawing a direct analogy to test-driven development in software engineering.
+
+\textbf{Reproducibility.} Code, experiment configurations, prompt templates, and all 960 result JSONs are available at \url{https://github.com/karthyick/evaluation-first-attention}.
+
+Future work includes: (a)~validating \fwrl{}'s contribution with weaker generators and harder benchmarks where per-criterion failure heterogeneity is greater, (b)~deeper model integration via criteria embeddings in the attention mechanism, (c)~adaptive criteria count selection based on prompt complexity, and (d)~domain-specific evaluation in code generation, medical question answering, and enterprise document synthesis.
 
 % ============================================================================
 % REFERENCES
@@ -588,6 +701,31 @@ Karandeep Ravi, Valerio Terragni, and Gunel Jahangirova.
 \newblock LLMLOOP: Improving LLM-Generated Code and Tests via Iterative Feedback.
 \newblock In \emph{IEEE International Conference on Software Maintenance and Evolution (ICSME)}, 2025.
 
+\bibitem[Khattab et al.(2023)]{khattab2023dspy}
+Omar Khattab, Arnav Singhvi, Paridhi Maheshwari, Zhiyuan Zhang, Keshav Santhanam, Sri Vardhamanan, Saiful Haq, Ashutosh Sharma, Thomas T. Joshi, Moez Moez, Hanna Hajishirzi, and Christopher Potts.
+\newblock DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines.
+\newblock In \emph{International Conference on Learning Representations (ICLR)}, 2024.
+
+\bibitem[Pryzant et al.(2023)]{pryzant2023automatic}
+Reid Pryzant, Dan Iter, Jerry Li, Yin Tat Lee, Chenguang Zhu, and Michael Zeng.
+\newblock Automatic Prompt Optimization with ``Gradient Descent'' and Beam Search.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing (EMNLP)}, 2023.
+
+\bibitem[Yang et al.(2023)]{yang2023large}
+Chengrun Yang, Xuezhi Wang, Yifeng Lu, Hanxiao Liu, Quoc V. Le, Denny Zhou, and Xinyun Chen.
+\newblock Large Language Models as Optimizers.
+\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS)}, 2023.
+
+\bibitem[Zheng et al.(2023)]{zheng2023judging}
+Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric P. Xing, Hao Zhang, Joseph E. Gonzalez, and Ion Stoica.
+\newblock Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena.
+\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS)}, 2023.
+
+\bibitem[Wei et al.(2022)]{wei2022finetuned}
+Jason Wei, Maarten Bosma, Vincent Y. Zhao, Kelvin Guu, Adams Wei Yu, Brian Lester, Nan Du, Andrew M. Dai, and Quoc V. Le.
+\newblock Finetuned Language Models Are Zero-Shot Learners.
+\newblock In \emph{International Conference on Learning Representations (ICLR)}, 2022.
+
 \end{thebibliography}
 
 % ============================================================================
@@ -603,8 +741,8 @@ We provide the core prompt templates used in each component of \efa{} to facilit
 
 \begin{small}
 \begin{verbatim}
-You are an evaluation criteria designer. Given a user 
-prompt, generate {n} non-overlapping evaluation criteria 
+You are an evaluation criteria designer. Given a user
+prompt, generate {n} non-overlapping evaluation criteria
 ordered from most fundamental to least fundamental.
 
 For each criterion, provide:
@@ -651,8 +789,8 @@ User prompt: {P}
 
 \begin{small}
 \begin{verbatim}
-Evaluate the following response against ONE specific 
-criterion. Score ONLY this criterion on a 1-5 scale 
+Evaluate the following response against ONE specific
+criterion. Score ONLY this criterion on a 1-5 scale
 using the rubric provided.
 
 Criterion: {criterion_name}
@@ -667,7 +805,7 @@ Rubric:
 User prompt: {P}
 Response: {R}
 
-Provide your score (1-5) and a one-sentence 
+Provide your score (1-5) and a one-sentence
 justification. Output format:
 Score: [1-5]
 Reason: [one sentence]

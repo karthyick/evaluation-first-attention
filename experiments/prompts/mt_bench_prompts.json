@@ -1,0 +1,402 @@
+[
+    {
+        "id": "mt-001",
+        "prompt": "Write a captivating opening paragraph for a literary novel set in a near-future city where memories can be bought and sold. Establish the tone, introduce the narrator, and hint at the central conflict.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-002",
+        "prompt": "Compose a persuasive op-ed (400–500 words) arguing that social media companies should be held legally liable for algorithmic amplification of misinformation. Use at least three concrete policy proposals.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-003",
+        "prompt": "Draft a formal letter of apology from a tech CEO to users whose private data was inadvertently exposed. The letter must acknowledge responsibility, explain what happened in plain language, and outline concrete remediation steps.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-004",
+        "prompt": "Write a short story (350–450 words) in the style of Borges: a scholar discovers that every book ever written is a commentary on a single, never-written original text. End with an ironic twist.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-005",
+        "prompt": "You are a speechwriter for a fictional president. Draft a 300-word Oval Office address announcing that humanity has made confirmed first contact with an extraterrestrial civilization. Balance optimism, caution, and national unity.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-006",
+        "prompt": "Write a product description for a luxury smartwatch targeting ultra-high-net-worth individuals who are skeptical of technology. Emphasize craftsmanship, exclusivity, and understated capability without using clichéd tech buzzwords.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-007",
+        "prompt": "Continue the following story opening in 300 words, maintaining the voice and escalating the tension: 'The last lighthouse keeper on Earth had been dead for three days before the automated logs noticed the anomaly.'",
+        "category": "writing"
+    },
+    {
+        "id": "mt-008",
+        "prompt": "Write a cover letter for a mid-career software engineer applying to a principal engineer role at a company whose values include radical transparency, engineering excellence, and customer obsession. Make it specific, not generic.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-009",
+        "prompt": "Compose a haiku sequence (five haiku) capturing the five stages of debugging a critical production outage, from discovery through resolution. Each haiku should evoke a distinct emotional beat.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-010",
+        "prompt": "Write a 400-word critical review of an imaginary film that won every major Oscar but was secretly mediocre. Your review should praise specific technical achievements while dismantling the film's emotional shallowness, without being cruel.",
+        "category": "writing"
+    },
+    {
+        "id": "mt-011",
+        "prompt": "You are Socrates, transported to modern Silicon Valley. A young startup founder pitches you their app that monetizes human attention spans. Lead them through a Socratic dialogue that exposes the ethical contradictions in their business model.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-012",
+        "prompt": "Act as a senior NASA flight director during the Apollo 13 crisis (April 1970). A junior engineer is proposing an untested CO2-scrubber workaround using available spacecraft materials. Respond in character, balancing urgency, skepticism, and leadership.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-013",
+        "prompt": "You are a defense attorney in a trial where your client is an AI system accused of causing a fatal autonomous-vehicle accident. The prosecution has just rested. Deliver your opening statement to the jury.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-014",
+        "prompt": "Act as Marie Curie giving a guest lecture to modern PhD students in 2025. Explain your discovery of radioactivity, react to what science has learned since your death, and offer advice on persevering through institutional discrimination in science.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-015",
+        "prompt": "You are a therapist specializing in AI-human relationships. A patient explains they have developed a strong emotional attachment to their AI assistant and are now grieving because the company deprecated that model. Respond empathetically and professionally.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-016",
+        "prompt": "Act as a Michelin three-star chef who has agreed to judge a home cook's attempt at boeuf bourguignon. The cook used instant coffee instead of cognac and forgot to pearl the onions. Deliver your critique in character — honest but constructive.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-017",
+        "prompt": "You are a seasoned venture capitalist in 2009 hearing a pitch from the founders of Airbnb for the first time. Based only on what was known in 2009 (pre-smartphone ubiquity, post-financial-crisis economy), give your honest investment assessment.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-018",
+        "prompt": "Act as Alan Turing debating a modern AI safety researcher at a public symposium. Turing argues that any machine that reliably passes the imitation game is, for all practical purposes, intelligent. Argue his position rigorously against contemporary objections.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-019",
+        "prompt": "You are a experienced nurse interviewing a patient who presents with fatigue, unexplained weight loss, and night sweats over the past three months. Conduct the intake interview, ask appropriate follow-up questions, and summarize findings for the attending physician.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-020",
+        "prompt": "Act as a seasoned UN negotiator mediating a fictional dispute between two nations over a shared river whose upstream dam construction threatens downstream agriculture. Open the session, establish ground rules, and propose an initial framework for dialogue.",
+        "category": "roleplay"
+    },
+    {
+        "id": "mt-021",
+        "prompt": "Read the following paragraph and extract: (1) all named organizations, (2) all monetary amounts with their context, and (3) the single most important causal claim. Paragraph: 'In Q3 2024, Meridian Capital announced a $4.2 billion acquisition of Synthos Therapeutics, contingent on FDA approval of Synthos's lead compound SYN-117. The deal, advised by Goldman Sachs and structured through a Cayman Islands holding entity, collapsed in November after the FDA issued a Complete Response Letter citing insufficient Phase III data, erasing $800 million in combined market capitalization overnight.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-022",
+        "prompt": "From the following meeting transcript excerpt, extract a structured action-items table with columns: Owner, Action, Deadline, Dependencies. Transcript: 'Sarah will finalize the API contract by Thursday. That unblocks Marcus on the integration layer, which he needs done by end of sprint. Jamie was supposed to write the test plan but is waiting on the spec from Sarah. Tom mentioned he needs the integration layer before he can start performance testing, targeting two weeks from now.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-023",
+        "prompt": "The following is a nutrition label for a protein bar. Extract and present in a clean table: all macronutrients per serving, the percentage of daily value for each mineral listed, and identify the top three ingredients by weight. Label text: 'Serving size 60g. Calories 240. Total Fat 8g (10% DV). Saturated Fat 2.5g (13% DV). Trans Fat 0g. Cholesterol 5mg (2% DV). Sodium 220mg (10% DV). Total Carbohydrate 24g (9% DV). Dietary Fiber 4g (14% DV). Total Sugars 9g. Protein 20g. Calcium 150mg (10% DV). Iron 3mg (15% DV). Potassium 320mg (6% DV). Ingredients: Protein Blend (Whey Protein Concentrate, Milk Protein Isolate), Oats, Almonds, Honey, Cocoa Powder, Natural Flavors, Sunflower Lecithin.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-024",
+        "prompt": "Extract the logical structure of the following argument, identifying the main conclusion, the supporting premises, and any unstated assumptions. Argument: 'Countries with higher levels of income inequality consistently show lower social mobility. The United States has one of the highest Gini coefficients among developed nations. Therefore, the American dream of upward mobility through hard work is, statistically speaking, less attainable than it is in countries like Denmark or Canada.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-025",
+        "prompt": "Given the following résumé summary, extract and rank the candidate's top five technical skills by evidence strength (most demonstrated to least), and flag any red flags or gaps a hiring manager should investigate. Summary: 'Eight years in software engineering. Led migration of monolith to microservices at a fintech startup (2019–2022). Proficient in Python, Java, and Kubernetes. Managed a team of six engineers. Published two papers on distributed consensus algorithms. Career gap 2022–2024 not explained. Self-described expert in Rust despite no listed Rust projects. Holds AWS Solutions Architect certification (expired 2021).'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-026",
+        "prompt": "From the following legal contract clause, extract: the primary obligation of each party, any conditions precedent, the consequence of breach, and the governing jurisdiction. Clause: 'Vendor shall deliver the completed software system, conforming to the specifications in Exhibit A, no later than March 31, 2026, provided that Client has delivered all required API credentials no later than January 15, 2026. Failure by Vendor to deliver on schedule, absent a documented delay caused by Client's non-performance, shall entitle Client to liquidated damages of $10,000 per day of delay, up to a maximum of $500,000. This agreement shall be governed by the laws of the State of Delaware.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-027",
+        "prompt": "Parse the following unstructured customer complaint and produce a structured JSON object with fields: issue_type, severity (1–5), affected_product, customer_sentiment, requested_resolution, and key_dates. Complaint: 'I've been a premium subscriber since January 2023 and this is absolutely unacceptable. My account was locked out on March 12th with no warning and I lost three years of saved data. I called support four times and nobody fixed it. I want a full refund for the past year AND my data restored immediately or I am contacting the FTC.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-028",
+        "prompt": "Read the following abstract and extract: the research question, the methodology, the key quantitative finding, and the main limitation acknowledged by the authors. Abstract: 'This study examines whether daily mindfulness meditation reduces cortisol levels in high-stress occupations. Using a randomized controlled trial with 142 emergency room nurses over 8 weeks, participants in the intervention group practiced 20-minute guided meditations daily. Salivary cortisol measured at wake, noon, and bedtime showed a 23% reduction in morning cortisol in the intervention group versus 4% in controls (p < 0.01). Limitation: the study was conducted at a single urban hospital in the Northeastern US, limiting generalizability.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-029",
+        "prompt": "From the following earnings call excerpt, extract: (1) the three main reasons management gave for the revenue miss, (2) any forward guidance figures mentioned, and (3) the defensive or deflective language used that an analyst should flag. Excerpt: 'While Q4 revenue came in at $2.1 billion versus consensus of $2.4 billion, we believe this reflects transitory headwinds rather than structural issues. Macro uncertainty, a delayed enterprise deal that we expect to close in Q1, and the strategic decision to exit lower-margin contracts all contributed. For full-year 2025 we are guiding to $9.0–$9.5 billion, reflecting our continued confidence in the platform. We remain committed to long-term value creation.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-030",
+        "prompt": "Extract the dependency graph from the following system description, presenting it as a list of directed edges (A → B means A depends on B). Description: 'The API gateway depends on the authentication service and the rate limiter. The authentication service depends on the user database and the token cache. The rate limiter depends on Redis. The notification service depends on the API gateway and the message queue. The message queue depends on the broker cluster. The user database depends on the primary Postgres instance, which replicates to a read replica.'",
+        "category": "extraction"
+    },
+    {
+        "id": "mt-031",
+        "prompt": "Five friends — Amara, Ben, Clara, David, and Elena — each have a different favorite color (red, blue, green, yellow, purple) and a different pet (cat, dog, fish, bird, rabbit). Amara's favorite color is not red or blue. Ben has a fish. Clara's favorite color is green. The person with the rabbit likes purple. David doesn't have a cat or a bird. Elena's favorite color is red. Determine each person's favorite color and pet.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-032",
+        "prompt": "A company's policy states: 'Any employee who works more than 50 hours per week for three consecutive weeks is eligible for overtime compensation.' An employee worked 52, 48, and 51 hours in three consecutive weeks. Is the employee eligible? Now consider a second employee who worked 51, 51, and 51 hours over a four-week span where the middle three weeks were consecutive. Is this second employee eligible? Explain your reasoning precisely.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-033",
+        "prompt": "You have 12 coins, one of which is counterfeit and either heavier or lighter than the rest. Using a balance scale with only three weighings, describe the exact strategy to identify the counterfeit coin and determine whether it is heavier or lighter.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-034",
+        "prompt": "Evaluate this causal claim: 'Countries that have more hospitals per capita have higher death rates. Therefore, hospitals cause death.' Identify all reasoning errors, explain the correct causal interpretation, and name the specific statistical fallacy at work.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-035",
+        "prompt": "Three engineers — Alice, Bob, and Carol — are debugging a system. The system fails if and only if at least two of three components (A, B, C) are broken. Alice believes component A is broken. Bob believes B is broken. Carol believes neither A nor B is broken, but C is. If exactly one of the three engineers is correct about their entire belief, can you determine the system's state? Show all possible cases.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-036",
+        "prompt": "A study finds that cities with more ice cream sales have more drowning incidents. A public health official proposes banning ice cream sales near beaches to reduce drownings. Systematically identify every flaw in this reasoning, and propose the most plausible true causal structure.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-037",
+        "prompt": "Using only the premises given (no outside knowledge), determine what can be validly concluded: (1) All mammals are warm-blooded. (2) All warm-blooded animals regulate their body temperature internally. (3) Some animals that regulate body temperature internally are found in Antarctica. (4) No animal found in Antarctica is a reptile. What can you conclude about reptiles and warm-bloodedness? What cannot be concluded?",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-038",
+        "prompt": "A self-driving car must choose between two unavoidable outcomes: (A) swerve left and certainly injure one pedestrian, or (B) continue straight and certainly injure three pedestrians. The single pedestrian in option A is a child; the three in option B are adults. Analyze this using utilitarian, deontological, and virtue ethics frameworks. Identify where the frameworks agree and disagree.",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-039",
+        "prompt": "Four suspects — W, X, Y, Z — are questioned about a theft. Each makes two statements. W: 'I didn't do it. X did it.' X: 'W is lying. Z did it.' Y: 'X is innocent. I didn't do it.' Z: 'Y is lying. W did it.' Exactly one person is guilty, and the guilty person's two statements are both false while all innocent people tell the truth. Who is guilty?",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-040",
+        "prompt": "Explain the general principle that allows you to determine whether a number is divisible by 9 without performing division, then apply it to the number 2,034,567. Next, explain why this rule works based on modular arithmetic, specifically using the fact that 10 ≡ 1 (mod 9).",
+        "category": "reasoning"
+    },
+    {
+        "id": "mt-041",
+        "prompt": "A farmer has 100 meters of fencing and wants to enclose a rectangular area against a straight river, using the river as one side (no fencing needed there). What dimensions maximize the enclosed area? Show your work using calculus and verify using the AM-GM inequality.",
+        "category": "math"
+    },
+    {
+        "id": "mt-042",
+        "prompt": "A bag contains 4 red, 3 blue, and 2 green marbles. Two marbles are drawn without replacement. (a) What is the probability that both marbles are the same color? (b) Given that the first marble drawn is red, what is the probability that the second marble is also red? (c) What is the probability that at least one marble is blue?",
+        "category": "math"
+    },
+    {
+        "id": "mt-043",
+        "prompt": "Prove that √2 is irrational. Then use the same proof technique to prove that √3 is irrational. Finally, explain why √4 is rational using the same framework to show exactly where the proof breaks down.",
+        "category": "math"
+    },
+    {
+        "id": "mt-044",
+        "prompt": "A bank offers compound interest at 6% per annum. (a) Using the compound interest formula, calculate the amount after 10 years on a principal of $5,000 compounded annually, quarterly, and continuously. (b) How many years does it take for money to double at 6% compounded annually? Derive the answer exactly and also using the Rule of 72.",
+        "category": "math"
+    },
+    {
+        "id": "mt-045",
+        "prompt": "Two trains start at the same time from cities A and B, which are 300 km apart, traveling toward each other. Train 1 travels at 80 km/h and Train 2 at 70 km/h. At the same moment, a bee starts flying from the front of Train 1 toward Train 2 at 150 km/h, bouncing back and forth between the trains until they meet. How far does the bee travel in total? Solve using both the naive sum-of-series method and the elegant shortcut.",
+        "category": "math"
+    },
+    {
+        "id": "mt-046",
+        "prompt": "A system of equations: 3x + 2y − z = 7; x − y + 2z = −1; 2x + 3y + z = 12. Solve the system using Gaussian elimination, showing each row operation explicitly. Verify your solution by substitution.",
+        "category": "math"
+    },
+    {
+        "id": "mt-047",
+        "prompt": "In how many ways can 8 people be seated at a round table such that two specific people (Alice and Bob) are never adjacent? Show your reasoning step by step, being careful to account for rotational symmetry.",
+        "category": "math"
+    },
+    {
+        "id": "mt-048",
+        "prompt": "Derive the quadratic formula from first principles by completing the square on the general equation ax² + bx + c = 0. Then use it to solve 2x² − 3x − 5 = 0, and verify one root by factoring the original equation.",
+        "category": "math"
+    },
+    {
+        "id": "mt-049",
+        "prompt": "A point P is inside an equilateral triangle with side length 6. The perpendicular distances from P to the three sides are 1, 2, and h respectively. Find h and prove that the sum of perpendicular distances from any interior point to the sides of an equilateral triangle is constant.",
+        "category": "math"
+    },
+    {
+        "id": "mt-050",
+        "prompt": "Using only the definition of a limit, prove that lim(x→2) (3x − 1) = 5. Then explain intuitively why the epsilon-delta definition captures the notion of 'getting arbitrarily close' and where the algebraic proof connects to that intuition.",
+        "category": "math"
+    },
+    {
+        "id": "mt-051",
+        "prompt": "Implement a Python function `lru_cache(capacity)` that returns an LRU cache object with `get(key)` and `put(key, value)` methods. Both operations must run in O(1) time. Do not use Python's built-in `functools.lru_cache`. Include the data structures used and explain why they achieve O(1) complexity.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-052",
+        "prompt": "The following Python code is supposed to find all prime numbers up to n using the Sieve of Eratosthenes, but it contains three bugs. Identify and fix each bug, explain what each bug caused, and then optimize the corrected version to reduce memory usage by approximately 50%. Code: `def sieve(n):\n    primes = [True] * n\n    primes[0] = primes[1] = False\n    for i in range(2, n):\n        if primes[i]:\n            for j in range(i, n, i):\n                primes[j] = False\n    return [i for i in range(n) if primes[i]]`",
+        "category": "coding"
+    },
+    {
+        "id": "mt-053",
+        "prompt": "Design a thread-safe rate limiter in Python that implements the token bucket algorithm. It should support multiple named buckets (e.g., per user, per API endpoint), configurable refill rates, and burst capacity. Include a usage example and explain the concurrency strategy.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-054",
+        "prompt": "Write a SQL query to find the top 3 departments by average salary, but only considering employees who have been with the company for more than 2 years and earn above the company-wide median salary. Include department name, average salary, and employee count. Assume tables: `employees(id, name, department_id, salary, hire_date)` and `departments(id, name)`.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-055",
+        "prompt": "Implement a function that deserializes a binary tree from its preorder traversal string (e.g., '1,2,#,#,3,4,#,#,5,#,#') where '#' represents null nodes. Then implement the corresponding serializer. Prove your serialization is unambiguous by explaining why preorder alone (without null markers) would fail.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-056",
+        "prompt": "Explain the difference between deadlock, livelock, and starvation in concurrent systems. For each, provide a minimal concrete code scenario (pseudocode is fine) that demonstrates the problem, and describe a strategy to prevent it.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-057",
+        "prompt": "Implement a minimal event-driven pub/sub system in Python with `subscribe(topic, callback)`, `unsubscribe(topic, callback)`, and `publish(topic, *args, **kwargs)` methods. Handle edge cases: publishing to a topic with no subscribers, callbacks that raise exceptions, and thread-safe access if called from multiple threads.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-058",
+        "prompt": "Given a directed graph represented as an adjacency list, write a function to detect all cycles and return them as lists of nodes. A graph may have multiple distinct cycles. Your solution should handle graphs with self-loops and parallel edges. Analyze the time and space complexity.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-059",
+        "prompt": "You are given a log file where each line follows the format: `[TIMESTAMP] [LEVEL] [SERVICE] MESSAGE`. Write a Python script that (a) parses the log, (b) counts errors per service in the last 60 minutes, (c) identifies the service with the highest error rate, and (d) outputs a summary report. Include regex, datetime handling, and proper error handling for malformed lines.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-060",
+        "prompt": "Explain the time and space complexity of quicksort in the best, average, and worst cases. Then implement an in-place quicksort with median-of-three pivot selection to mitigate worst-case behavior. Finally, explain when you would prefer mergesort over quicksort and vice versa.",
+        "category": "coding"
+    },
+    {
+        "id": "mt-061",
+        "prompt": "Derive from first principles why the speed of light in vacuum is the universal speed limit. Your explanation should connect Maxwell's equations, the Michelson-Morley experiment's implication, and the relativistic energy equation E = γmc². Identify the single logical assumption from which the entire limit follows.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-062",
+        "prompt": "Explain the mechanism by which CRISPR-Cas9 achieves precise genome editing. Distinguish between the roles of the guide RNA, the Cas9 protein, and the PAM sequence. Describe two scenarios where off-target edits occur and the current technical approaches to minimize them.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-063",
+        "prompt": "A ball is thrown upward from a cliff 80 meters high with an initial velocity of 20 m/s. Using kinematic equations, find (a) the maximum height above the ground, (b) the time at which it reaches maximum height, (c) the total time until it hits the ground, and (d) the velocity at impact. (g = 10 m/s²)",
+        "category": "stem"
+    },
+    {
+        "id": "mt-064",
+        "prompt": "Explain the concept of entropy in thermodynamics and in information theory. Derive Shannon entropy from first principles using the axioms it must satisfy. Then show that the thermodynamic and information-theoretic entropies are more than analogous — they are the same physical quantity, and explain what Landauer's principle reveals about this connection.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-065",
+        "prompt": "Describe the mechanism of action of mRNA vaccines. Explain what the immune system actually responds to, why the mRNA does not integrate into the genome, and why the spike protein expressed from the vaccine mRNA is inherently less dangerous than the spike protein on the actual SARS-CoV-2 virus.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-066",
+        "prompt": "Explain the P vs NP problem to a computer science PhD student who has never studied complexity theory. Define the complexity classes P and NP rigorously, give a concrete example of a problem in NP that is not known to be in P, and explain why proving P ≠ NP has been so resistant to conventional proof techniques.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-067",
+        "prompt": "Describe, step by step, what happens chemically when iron rusts. Start at the atomic level (electron transfer, oxidation states), proceed through the electrochemical mechanism (anodic and cathodic reactions), and explain why rusting is self-accelerating and why stainless steel resists it.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-068",
+        "prompt": "Explain how a transformer (the neural network architecture, not the electrical device) works, starting from the attention mechanism. Derive the scaled dot-product attention formula, explain why scaling by √d_k is necessary, and contrast multi-head attention with single-head attention in terms of what representational capacity is gained.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-069",
+        "prompt": "A telescope on Earth observes a distant galaxy whose hydrogen emission lines are redshifted by a factor of z = 0.15. Calculate the recession velocity using both the classical Doppler formula and the relativistic formula. Explain the difference, and describe what physical process is actually causing the redshift according to modern cosmology.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-070",
+        "prompt": "Explain the Central Dogma of molecular biology, then describe three well-established exceptions to it (beyond reverse transcription in retroviruses) that were discovered after the original formulation. For each exception, explain what it reveals about the dogma's original limitations.",
+        "category": "stem"
+    },
+    {
+        "id": "mt-071",
+        "prompt": "Explain the causes and consequences of the Thirty Years' War (1618–1648). Analyze how the Peace of Westphalia reshaped European political order, and argue whether the concept of 'Westphalian sovereignty' accurately describes the actual terms of the treaties or is a later retrospective construction.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-072",
+        "prompt": "Compare and contrast John Rawls's 'veil of ignorance' thought experiment with Robert Nozick's Wilt Chamberlain argument. Identify the single deepest philosophical disagreement between them — about the nature of rights, the role of outcomes, or something else — and assess which position is more internally consistent.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-073",
+        "prompt": "Analyze the narrative structure and thematic purpose of the unreliable narrator in Kazuo Ishiguro's 'The Remains of the Day.' How does Stevens's self-deception about both his professional conduct and his repressed feelings for Miss Kenton function as the novel's central moral argument?",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-074",
+        "prompt": "Explain Keynes's General Theory and its departure from classical economics. Then explain Milton Friedman's monetarist critique of Keynesian fiscal policy, specifically the permanent income hypothesis and the natural rate of unemployment. Assess which framework better explains the stagflation of the 1970s.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-075",
+        "prompt": "Trace the intellectual lineage from Hegel's dialectical method through Marx's historical materialism to Gramsci's concept of cultural hegemony. At each step, identify what the later thinker preserved, what they rejected, and what genuinely new insight they introduced.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-076",
+        "prompt": "Analyze the sociological mechanisms by which systemic racism persists in institutions long after explicitly discriminatory policies have been repealed. Draw on at least three distinct sociological concepts (e.g., path dependence, implicit bias, structural reproduction) and apply them to a specific domain such as housing, education, or criminal justice.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-077",
+        "prompt": "Explain what the Sapir-Whorf hypothesis claims in its strong and weak versions. Evaluate the current empirical evidence for and against linguistic relativity, citing specific cross-linguistic experiments (e.g., color perception, spatial cognition, time conceptualization). What is the current scientific consensus?",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-078",
+        "prompt": "Assess the historical debate over whether the dropping of atomic bombs on Hiroshima and Nagasaki was morally justified. Present the strongest version of both the 'justified' and 'unjustified' arguments, then explain which historical facts are most decisive and why historians continue to disagree.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-079",
+        "prompt": "Explain Hannah Arendt's concept of the 'banality of evil' as developed in 'Eichmann in Jerusalem.' Contrast her interpretation with intentionalist accounts of Nazi perpetrators. Then assess the subsequent scholarly critiques of Arendt's portrait of Eichmann — specifically those of Bettina Stangneth — and whether they undermine or refine her broader philosophical point.",
+        "category": "humanities"
+    },
+    {
+        "id": "mt-080",
+        "prompt": "Analyze the phenomenon of democratic backsliding in the 21st century. Using at least two case studies (e.g., Hungary, Turkey, Venezuela, India), identify the common institutional mechanisms by which elected leaders erode democratic norms. Assess whether these cases represent a failure of institutions, culture, economic conditions, or some interaction of all three.",
+        "category": "humanities"
+    }
+]

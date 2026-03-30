@@ -52,23 +52,24 @@ def update_weights(
 
 
 def _normalize_weights(criteria: list[Criterion]) -> None:
-    """Normalize weights to sum to 1, excluding locked criteria."""
-    total = sum(c.weight for c in criteria if not c.locked)
-    locked_total = sum(c.weight for c in criteria if c.locked)
+    """Normalize unlocked weights to fill the remaining weight budget.
 
-    if total > 0:
-        # Distribute remaining weight budget among unlocked criteria
+    Locked criteria have their weights frozen at their current value (checkpoint
+    mechanism, Section 3.4).  Only unlocked criteria are renormalized so that
+    the unlocked weights collectively sum to ``1 - sum(locked_weights)``.
+
+    If all criteria are locked, weights are left unchanged.
+    """
+    locked_total = sum(c.weight for c in criteria if c.locked)
+    unlocked_total = sum(c.weight for c in criteria if not c.locked)
+
+    if unlocked_total > 0:
+        # Scale unlocked weights to fill the remaining budget.
+        remaining = 1.0 - locked_total
         for c in criteria:
             if not c.locked:
-                c.weight = c.weight / (total + locked_total)
-            else:
-                c.weight = c.weight / (total + locked_total)
-    else:
-        # All locked — keep current weights
-        total_all = sum(c.weight for c in criteria)
-        if total_all > 0:
-            for c in criteria:
-                c.weight = c.weight / total_all
+                c.weight = c.weight / unlocked_total * remaining
+    # else: all criteria are locked — weights are frozen, nothing to do.
 
 
 def check_convergence(

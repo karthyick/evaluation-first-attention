@@ -1,0 +1,49 @@
+# EFA Full Experiment — MiniMax M2.5 (gen) + Ollama qwen3.5:9b (eval)
+# Cross-model evaluation: cloud generator + local evaluator = zero self-preference bias
+# MT-Bench 80 prompts across 8 categories
+
+generator_model: "openai/MiniMax-M2.5"
+evaluator_model: "ollama/qwen3.5:9b"
+
+# MiniMax via OpenAI-compatible endpoint
+gen_api_base: "https://api.minimax.io/v1"
+gen_api_key: "${MINIMAX_API_KEY}"
+
+# Hyperparameters (paper Section 4.4)
+n_criteria: 5
+threshold: 0.6
+max_iterations: 3
+alpha: 2.0
+epsilon: 0.1
+batched_eval: false
+seed: 42
+
+# Rate limiting
+gen_call_delay: 0.5
+eval_call_delay: 0.0
+
+# Prompts
+prompt_source: "mt-bench"
+max_prompts: 80
+
+# All 7 baselines
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - all-criteria-at-once
+  - uniform-reattention
+  - best-of-n
+  - fusion
+
+best_of_n_samples: 5
+
+# All 4 ablations
+ablations:
+  - efa-no-dyncriteria
+  - efa-no-cmpg
+  - efa-no-fwrl
+  - efa-no-iteration
+
+results_dir: "experiments/results"
+save_responses: true

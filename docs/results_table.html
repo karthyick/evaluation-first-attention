@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 32px; }
+h1 { font-size: 22px; margin-bottom: 6px; color: #58a6ff; }
+h2 { font-size: 16px; margin-bottom: 16px; color: #8b949e; font-weight: 400; }
+.meta { font-size: 13px; color: #8b949e; margin-bottom: 20px; }
+table { border-collapse: collapse; width: 100%; max-width: 900px; font-size: 14px; }
+th { background: #161b22; color: #58a6ff; padding: 10px 14px; text-align: left; border-bottom: 2px solid #30363d; font-weight: 600; }
+td { padding: 8px 14px; border-bottom: 1px solid #21262d; }
+tr:hover td { background: #161b22; }
+.method { font-weight: 600; color: #e6edf3; }
+.efa-row td { background: #0d2136; }
+.efa-row .method { color: #58a6ff; }
+.best { color: #3fb950; font-weight: 700; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.section-label { font-size: 11px; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; padding-top: 14px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.badge-green { background: #23312a; color: #3fb950; }
+.footer { margin-top: 20px; font-size: 12px; color: #484f58; }
+</style>
+</head>
+<body>
+<h1>Evaluation-First Generation (EFA) — MT-Bench Results</h1>
+<h2>Specification-Driven LLM Output Quality via Dynamic Rubric Conditioning and Iterative Criteria Refinement</h2>
+<div class="meta">Author: Karthick Raja M &nbsp;|&nbsp; Generator: MiniMax-M2.5 (cloud) &nbsp;|&nbsp; Evaluator: Qwen-3.5-9B (Ollama, local) &nbsp;|&nbsp; 80 MT-Bench prompts &nbsp;|&nbsp; n_criteria=5, τ=0.6, α=2.0, K_max=3 &nbsp;|&nbsp; 960 total runs</div>
+
+<table>
+<thead>
+<tr>
+  <th>Method</th>
+  <th>RAS ↑</th>
+  <th>APR (%) ↑</th>
+  <th>ITC ↓</th>
+  <th>TTC ↓</th>
+</tr>
+</thead>
+<tbody>
+<tr><td colspan="5" class="section-label">Baselines</td></tr>
+<tr>
+  <td class="method">Single-pass</td>
+  <td class="num">0.881</td>
+  <td class="num">71.2</td>
+  <td class="num best">1.0</td>
+  <td class="num best">9,210</td>
+</tr>
+<tr>
+  <td class="method">Rubric-then-Score</td>
+  <td class="num">0.863</td>
+  <td class="num">72.5</td>
+  <td class="num">1.0</td>
+  <td class="num">9,469</td>
+</tr>
+<tr>
+  <td class="method">All-Criteria-at-Once</td>
+  <td class="num">0.925</td>
+  <td class="num">90.0</td>
+  <td class="num">1.3</td>
+  <td class="num">13,408</td>
+</tr>
+<tr>
+  <td class="method">Uniform Reattention</td>
+  <td class="num">0.935</td>
+  <td class="num">90.0</td>
+  <td class="num">1.3</td>
+  <td class="num">17,814</td>
+</tr>
+<tr>
+  <td class="method">Best-of-5</td>
+  <td class="num">0.957</td>
+  <td class="num">91.2</td>
+  <td class="num">1.0</td>
+  <td class="num">21,999</td>
+</tr>
+<tr>
+  <td class="method">Self-Refine (Madaan et al., 2023)</td>
+  <td class="num">0.953</td>
+  <td class="num">92.5</td>
+  <td class="num">1.4</td>
+  <td class="num">13,652</td>
+</tr>
+<tr>
+  <td class="method">FusioN (Agarwal et al., 2025)</td>
+  <td class="num">0.956</td>
+  <td class="num">92.5</td>
+  <td class="num">1.0</td>
+  <td class="num">15,449</td>
+</tr>
+<tr><td colspan="5" class="section-label">Ablation Studies</td></tr>
+<tr>
+  <td class="method">EFA −Iteration</td>
+  <td class="num">0.943</td>
+  <td class="num">83.8</td>
+  <td class="num">1.0</td>
+  <td class="num">15,652</td>
+</tr>
+<tr>
+  <td class="method">EFA −DynCriteria</td>
+  <td class="num">0.943</td>
+  <td class="num">88.8</td>
+  <td class="num">1.4</td>
+  <td class="num">18,378</td>
+</tr>
+<tr>
+  <td class="method">EFA −CMPG</td>
+  <td class="num">0.950</td>
+  <td class="num">92.5</td>
+  <td class="num">1.3</td>
+  <td class="num">14,579</td>
+</tr>
+<tr>
+  <td class="method">EFA −FWRL</td>
+  <td class="num best">0.967</td>
+  <td class="num best">96.2</td>
+  <td class="num">1.1</td>
+  <td class="num">17,524</td>
+</tr>
+<tr><td colspan="5" class="section-label">Full System</td></tr>
+<tr class="efa-row">
+  <td class="method">EFA (Full)</td>
+  <td class="num">0.962</td>
+  <td class="num best">96.2</td>
+  <td class="num">1.2</td>
+  <td class="num">16,449</td>
+</tr>
+</tbody>
+</table>
+
+<div class="footer">
+960 total runs (12 methods × 80 MT-Bench prompts). Cross-model evaluation: MiniMax-M2.5 (generator) + Qwen-3.5-9B via Ollama (evaluator) — eliminates self-preference bias.<br>
+EFA achieves 96.2% APR, +25.0pp over single-pass, +3.7pp over strongest baselines. Iteration (−12.4pp) and dynamic criteria (−7.4pp) are the primary contributors. FWRL shows 0.0pp contribution (ceiling effect with strong generator — honestly reported).
+</div>
+</body>
+</html>

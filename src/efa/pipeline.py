@@ -41,6 +41,19 @@ class EFAPipeline:
     gen_temperature: float = 0.7
     eval_temperature: float = 0.1  # Low temp for consistent scoring
 
+    # Rate limiting
+    gen_call_delay: float = 0.0  # Delay between generator calls (seconds)
+    eval_call_delay: float = 0.0  # Delay between evaluator calls (seconds)
+
+    # Custom API endpoints (for OpenAI-compatible providers like MiniMax)
+    gen_api_base: str | None = None
+    gen_api_key: str | None = None
+    eval_api_base: str | None = None
+    eval_api_key: str | None = None
+
+    # Reproducibility
+    seed: int | None = None  # Passed to both gen_client and eval_client
+
     def run(self, prompt: str) -> PipelineResult:
         """Execute full EFA pipeline on a single prompt."""
         # Initialize clients
@@ -48,11 +61,19 @@ class EFAPipeline:
             model=self.model,
             temperature=self.gen_temperature,
             max_tokens=4096,
+            seed=self.seed,
+            call_delay=self.gen_call_delay,
+            api_base=self.gen_api_base,
+            api_key=self.gen_api_key,
         )
         eval_client = LLMClient(
             model=self.evaluator_model or self.model,
             temperature=self.eval_temperature,
             max_tokens=1024,
+            seed=self.seed,
+            call_delay=self.eval_call_delay,
+            api_base=self.eval_api_base,
+            api_key=self.eval_api_key,
         )
 
         # Phase 1: Generate criteria
@@ -68,6 +89,9 @@ class EFAPipeline:
 
         iterations: list[IterationTrace] = []
         previous_response: str | None = None
+        converged = False
+        prev_gen_tokens = 0
+        prev_eval_tokens = 0
 
         for k in range(1, effective_max_iter + 1):
             weights_before = [c.weight for c in criteria]
@@ -106,7 +130,11 @@ class EFAPipeline:
                 )
                 weights_after = [c.weight for c in criteria]
 
-            tokens_this_iter = gen_client.get_tokens_used() + eval_client.get_tokens_used()
+            cur_gen_tokens = gen_client.tracker.total
+            cur_eval_tokens = eval_client.tracker.total
+            tokens_this_iter = (cur_gen_tokens - prev_gen_tokens) + (cur_eval_tokens - prev_eval_tokens)
+            prev_gen_tokens = cur_gen_tokens
+            prev_eval_tokens = cur_eval_tokens
 
             iterations.append(IterationTrace(
                 iteration=k,

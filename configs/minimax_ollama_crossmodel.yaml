@@ -1,0 +1,39 @@
+# EFA Experiment — MiniMax (generation) + Ollama (evaluation)
+# Cross-model: MiniMax-M2.5 (cloud) → qwen3.5:9b (local)
+# Different architectures = zero self-preference bias
+
+generator_model: "minimax/MiniMax-M2.5"
+evaluator_model: "ollama/qwen3.5:9b"
+
+n_criteria: 5
+threshold: 0.6
+max_iterations: 3
+alpha: 2.0
+epsilon: 0.1
+batched_eval: false
+
+# MiniMax has generous limits, minimal delay needed
+gen_call_delay: 1.0
+eval_call_delay: 0.0
+
+prompt_source: "sample"
+max_prompts: 5
+
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - all-criteria-at-once
+  - uniform-reattention
+  - best-of-n
+
+best_of_n_samples: 5
+
+ablations:
+  - efa-no-dyncriteria
+  - efa-no-cmpg
+  - efa-no-fwrl
+  - efa-no-iteration
+
+results_dir: "experiments/results"
+save_responses: true

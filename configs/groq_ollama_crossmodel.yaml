@@ -1,0 +1,35 @@
+# EFA Experiment — TRUE Cross-Model
+# Generator: Groq llama-3.3-70b (cloud, different model family)
+# Evaluator: Ollama qwen3.5:9b (local, different model family)
+# Different architectures = zero self-preference bias
+
+generator_model: "groq/llama-3.3-70b-versatile"
+evaluator_model: "ollama/qwen3.5:9b"
+
+n_criteria: 3
+threshold: 0.6
+max_iterations: 2
+alpha: 2.0
+epsilon: 0.1
+batched_eval: false
+
+# Groq rate limit: 12K TPM, ~5s between calls
+gen_call_delay: 5.0
+eval_call_delay: 0.0
+
+prompt_source: "sample"
+max_prompts: 3
+
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - best-of-n
+
+best_of_n_samples: 3
+
+ablations:
+  - efa-no-fwrl
+
+results_dir: "experiments/results"
+save_responses: true

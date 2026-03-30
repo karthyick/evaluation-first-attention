@@ -78,12 +78,16 @@ def progressive_generate(
         response = client.complete(system, user)
         return response, [response]
 
-    # Full CMPG: progressive unmasking
+    # Full CMPG: progressive unmasking in groups
+    # Instead of n individual sub-steps, batch into ceil(n/2) groups
+    # to reduce LLM calls while preserving the curriculum effect.
     current_draft = previous_response
+    group_size = max(1, (n + 1) // 2)  # ~2-3 groups instead of n
 
-    for j in range(1, n + 1):
-        # Criteria mask M_j: only first j criteria are visible
-        visible = criteria[:j]
+    for j in range(group_size, n + 1, group_size):
+        # Reveal criteria up to position j (batched)
+        visible_end = min(j, n)
+        visible = criteria[:visible_end]
 
         system, user = _build_progressive_prompt(
             user_prompt=user_prompt,
@@ -92,6 +96,17 @@ def progressive_generate(
             n_total=n,
         )
 
+        current_draft = client.complete(system, user)
+        drafts.append(current_draft)
+
+    # Final pass with ALL criteria (if not already included)
+    if len(drafts) == 0 or visible_end < n:
+        system, user = _build_progressive_prompt(
+            user_prompt=user_prompt,
+            draft=current_draft,
+            visible_criteria=criteria,
+            n_total=n,
+        )
         current_draft = client.complete(system, user)
         drafts.append(current_draft)
 

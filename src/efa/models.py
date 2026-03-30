@@ -109,5 +109,7 @@ class ExperimentRecord:
     itc: int  # Iterations to Convergence
     ttc: int  # Total Token Cost
     response: str
+    generator_model: str = ""  # Model used for generation (reproducibility)
+    evaluator_model: str = ""  # Model used for evaluation (reproducibility)
     criteria_names: list[str] = field(default_factory=list)
     per_criterion_scores: list[float] = field(default_factory=list)

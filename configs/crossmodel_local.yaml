@@ -1,0 +1,40 @@
+# EFA Experiment — Cross-Model Local (Ollama)
+# Generator: qwen3.5:9b (fast, 6GB VRAM)
+# Evaluator: qwen3.5:32b (stronger, different weight initialization = less self-bias)
+# Two different model sizes = meaningful cross-model evaluation
+
+generator_model: "ollama/qwen3.5:27b"
+evaluator_model: "ollama/qwen3.5:27b"
+
+n_criteria: 3
+threshold: 0.6
+max_iterations: 2
+alpha: 2.0
+epsilon: 0.1
+batched_eval: false
+
+# No delay needed for Ollama (local, no rate limits)
+gen_call_delay: 0.0
+eval_call_delay: 0.0
+
+prompt_source: "sample"
+max_prompts: 5
+
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - all-criteria-at-once
+  - uniform-reattention
+  - best-of-n
+
+best_of_n_samples: 3
+
+ablations:
+  - efa-no-dyncriteria
+  - efa-no-cmpg
+  - efa-no-fwrl
+  - efa-no-iteration
+
+results_dir: "experiments/results"
+save_responses: true

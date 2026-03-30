@@ -1,0 +1,38 @@
+# EFA Experiment — Groq (generation) + Gemini (evaluation)
+# Cross-model eval to counter self-preference bias critique
+
+generator_model: "groq/llama-3.3-70b-versatile"
+evaluator_model: "gemini/gemini-2.0-flash"
+
+n_criteria: 5
+threshold: 0.6
+max_iterations: 3
+alpha: 2.0
+epsilon: 0.1
+batched_eval: false
+
+# Rate limit pacing (Groq: 12K TPM, Gemini: 15 RPM)
+gen_call_delay: 5.0
+eval_call_delay: 4.0
+
+prompt_source: "sample"
+max_prompts: 5
+
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - all-criteria-at-once
+  - uniform-reattention
+  - best-of-n
+
+best_of_n_samples: 5
+
+ablations:
+  - efa-no-dyncriteria
+  - efa-no-cmpg
+  - efa-no-fwrl
+  - efa-no-iteration
+
+results_dir: "experiments/results"
+save_responses: true

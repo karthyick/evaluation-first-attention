@@ -1,0 +1,38 @@
+# EFA Experiment — MiniMax-M2.5 for BOTH generation and evaluation
+# Same-model setup (like Run 1 with Ollama) but with a stronger model
+# Validates EFA with a commercial-grade model
+
+generator_model: "minimax/MiniMax-M2.5"
+evaluator_model: "minimax/MiniMax-M2.5"
+
+n_criteria: 5
+threshold: 0.6
+max_iterations: 3
+alpha: 2.0
+epsilon: 0.1
+batched_eval: false
+
+gen_call_delay: 1.0
+eval_call_delay: 1.0
+
+prompt_source: "sample"
+max_prompts: 5
+
+baselines:
+  - single-pass
+  - self-refine
+  - rubric-then-score
+  - all-criteria-at-once
+  - uniform-reattention
+  - best-of-n
+
+best_of_n_samples: 5
+
+ablations:
+  - efa-no-dyncriteria
+  - efa-no-cmpg
+  - efa-no-fwrl
+  - efa-no-iteration
+
+results_dir: "experiments/results"
+save_responses: true

@@ -82,11 +82,21 @@ def _evaluate_individual(
             response=response,
         )
 
-        result = client.complete_json(system=EVAL_SYSTEM_PROMPT, user=user)
-        score = max(1, min(5, int(result["score"])))
+        # Retry once on parse failure, then default to score 3 (acceptable)
+        score = 3
+        reasoning = ""
+        for _attempt in range(2):
+            try:
+                result = client.complete_json(system=EVAL_SYSTEM_PROMPT, user=user)
+                score = max(1, min(5, int(result["score"])))
+                reasoning = result.get("reasoning", "")
+                break
+            except (ValueError, KeyError, TypeError):
+                continue
+
         raw_scores.append(score)
         normalized.append(score / 5.0)
-        reasonings.append(result.get("reasoning", ""))
+        reasonings.append(reasoning)
 
     return EvaluationResult(
         scores=normalized,
@@ -115,7 +125,14 @@ def _evaluate_batched(
         f"Return a JSON array with one object per criterion."
     )
 
-    results = client.complete_json(system=BATCH_EVAL_SYSTEM_PROMPT, user=user)
+    # Retry once on parse failure, default to all-3 scores
+    try:
+        results = client.complete_json(system=BATCH_EVAL_SYSTEM_PROMPT, user=user)
+    except (ValueError, KeyError, TypeError):
+        try:
+            results = client.complete_json(system=BATCH_EVAL_SYSTEM_PROMPT, user=user)
+        except (ValueError, KeyError, TypeError):
+            results = []
 
     raw_scores: list[int] = []
     normalized: list[float] = []

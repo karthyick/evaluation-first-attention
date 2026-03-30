@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0d1117; color: #e6edf3; font-family: 'Segoe UI', system-ui, sans-serif; padding: 40px; display: flex; justify-content: center; }
+.container { max-width: 700px; width: 100%; }
+h1 { font-size: 20px; color: #58a6ff; margin-bottom: 24px; text-align: center; }
+
+.flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+.box {
+  border-radius: 10px;
+  padding: 16px 24px;
+  width: 520px;
+  text-align: center;
+  position: relative;
+}
+
+.io { background: #21262d; border: 1px solid #30363d; }
+.criteria { background: #0d2847; border: 1px solid #1f6feb; }
+.gen { background: #0d2d1a; border: 1px solid #238636; }
+.eval { background: #3d1f28; border: 1px solid #da3633; }
+.decision { background: #2d2a06; border: 1px solid #d29922; border-radius: 50%; width: 180px; height: 80px; display: flex; align-items: center; justify-content: center; }
+
+.box-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.box-sub { font-size: 12px; color: #8b949e; }
+.criteria .box-title { color: #58a6ff; }
+.gen .box-title { color: #3fb950; }
+.eval .box-title { color: #f85149; }
+.decision .box-title { color: #d29922; font-size: 13px; }
+
+.arrow {
+  width: 2px;
+  height: 28px;
+  background: #484f58;
+  position: relative;
+}
+.arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #484f58;
+}
+
+.arrow-label {
+  font-size: 11px;
+  color: #8b949e;
+  position: absolute;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.feedback-loop {
+  position: relative;
+  width: 520px;
+  height: 40px;
+}
+.feedback-line {
+  position: absolute;
+  top: 0;
+  right: -40px;
+  width: 2px;
+  height: 320px;
+  background: #da3633;
+  opacity: 0.6;
+}
+.feedback-line::before {
+  content: 'No → FWRL reweighting';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #f85149;
+  white-space: nowrap;
+}
+.feedback-top {
+  position: absolute;
+  top: 0;
+  right: -40px;
+  width: 40px;
+  height: 2px;
+  background: #da3633;
+  opacity: 0.6;
+}
+.feedback-bottom {
+  position: absolute;
+  bottom: 0;
+  right: -40px;
+  width: 40px;
+  height: 2px;
+  background: #da3633;
+  opacity: 0.6;
+}
+
+.gen-inner {
+  background: rgba(35, 134, 54, 0.1);
+  border: 1px dashed #238636;
+  border-radius: 6px;
+  padding: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #7ee787;
+  font-family: 'Cascadia Code', 'Consolas', monospace;
+}
+
+.legend {
+  margin-top: 32px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #8b949e;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>EFA Architecture — Evaluation-First Attention</h1>
+
+<div class="flow">
+  <!-- Input -->
+  <div class="box io">
+    <div class="box-title">User Prompt P</div>
+  </div>
+
+  <div class="arrow" style="position: relative;">
+    <span class="arrow-label"></span>
+  </div>
+
+  <!-- Criteria Generator -->
+  <div class="box criteria">
+    <div class="box-title">Criteria Generator C</div>
+    <div class="box-sub">Generates query-specific criteria C = {c₁, c₂, ..., cₙ} with initial weights w⁽⁰⁾</div>
+  </div>
+
+  <div class="arrow" style="position: relative;">
+    <span class="arrow-label">C, w⁽⁰⁾</span>
+  </div>
+
+  <!-- CMPG -->
+  <div class="box gen">
+    <div class="box-title">Criteria-Masked Progressive Generation (CMPG)</div>
+    <div class="box-sub">Progressive unmasking with emphasis weights w⁽ᵏ⁾</div>
+    <div class="gen-inner">d₁⁽ᵏ⁾ →{c₁}→ d₂⁽ᵏ⁾ →{c₁,c₂}→ ··· →{c₁,...,cₙ}→ R⁽ᵏ⁾</div>
+  </div>
+
+  <div class="arrow" style="position: relative;">
+    <span class="arrow-label">R⁽ᵏ⁾</span>
+  </div>
+
+  <!-- Evaluator -->
+  <div class="box eval">
+    <div class="box-title">Failure-Weighted Evaluator E</div>
+    <div class="box-sub">Per-criterion scores s⁽ᵏ⁾ = (s₁, ..., sₙ) → Reweights w⁽ᵏ⁺¹⁾</div>
+  </div>
+
+  <div class="arrow" style="position: relative;">
+    <span class="arrow-label">s⁽ᵏ⁾</span>
+  </div>
+
+  <!-- Decision -->
+  <div class="box decision">
+    <div class="box-title">min(s⁽ᵏ⁾) ≥ τ ?</div>
+  </div>
+
+  <div class="arrow" style="position: relative;">
+    <span class="arrow-label" style="color: #3fb950;">Yes</span>
+  </div>
+
+  <!-- Output -->
+  <div class="box io">
+    <div class="box-title">Final Output R*</div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background: #1f6feb;"></div> Criteria Generation</div>
+  <div class="legend-item"><div class="legend-dot" style="background: #238636;"></div> Progressive Generation (CMPG)</div>
+  <div class="legend-item"><div class="legend-dot" style="background: #da3633;"></div> Failure-Weighted Evaluation (FWRL)</div>
+  <div class="legend-item"><div class="legend-dot" style="background: #d29922;"></div> Convergence Check</div>
+</div>
+
+</div>
+</body>
+</html>

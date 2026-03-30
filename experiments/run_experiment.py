@@ -77,6 +77,13 @@ def run_efa(
         "alpha": config.get("alpha", 2.0),
         "epsilon": config.get("epsilon", 0.1),
         "batched_eval": config.get("batched_eval", False),
+        "gen_call_delay": config.get("gen_call_delay", 0.0),
+        "eval_call_delay": config.get("eval_call_delay", 0.0),
+        "gen_api_base": config.get("gen_api_base"),
+        "gen_api_key": config.get("gen_api_key"),
+        "eval_api_base": config.get("eval_api_base"),
+        "eval_api_key": config.get("eval_api_key"),
+        "seed": config.get("seed"),
     }
 
     if ablation and ablation in ABLATION_CONFIGS:
@@ -97,6 +104,10 @@ def run_baseline(
         "model": config.get("generator_model", "gpt-4o"),
         "evaluator_model": config.get("evaluator_model"),
         "n_criteria": config.get("n_criteria", 5),
+        "gen_api_base": config.get("gen_api_base"),
+        "gen_api_key": config.get("gen_api_key"),
+        "eval_api_base": config.get("eval_api_base"),
+        "eval_api_key": config.get("eval_api_key"),
     }
 
     if name == "self-refine":
@@ -107,7 +118,9 @@ def run_baseline(
     return BASELINES[name](**kwargs)
 
 
-def result_to_record(prompt_data: dict, result: PipelineResult) -> ExperimentRecord:
+def result_to_record(
+    prompt_data: dict, result: PipelineResult, config: dict
+) -> ExperimentRecord:
     """Convert PipelineResult to ExperimentRecord."""
     return ExperimentRecord(
         prompt_id=prompt_data.get("id", "unknown"),
@@ -118,6 +131,8 @@ def result_to_record(prompt_data: dict, result: PipelineResult) -> ExperimentRec
         itc=result.n_iterations,
         ttc=result.total_tokens,
         response=result.response,
+        generator_model=config.get("generator_model", "unknown"),
+        evaluator_model=config.get("evaluator_model", "unknown"),
         criteria_names=[c.name for c in result.criteria],
         per_criterion_scores=result.final_scores,
     )
@@ -161,7 +176,27 @@ def print_results_table(records: list[ExperimentRecord]) -> None:
     console.print(table)
 
 
+def resolve_env_vars(config: dict) -> dict:
+    """Resolve ${ENV_VAR} references in config values."""
+    import os
+    resolved = {}
+    for k, v in config.items():
+        if isinstance(v, str) and v.startswith("${") and v.endswith("}"):
+            env_name = v[2:-1]
+            resolved[k] = os.environ.get(env_name, "")
+        else:
+            resolved[k] = v
+    return resolved
+
+
 def main():
+    # Load .env if present
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass
+
     parser = argparse.ArgumentParser(description="EFA Experiment Runner — Karthick Raja M")
     parser.add_argument("--config", type=str, default="configs/default.yaml")
     parser.add_argument("--method", type=str, help="Run single method (efa, single-pass, etc.)")
@@ -177,6 +212,9 @@ def main():
     else:
         console.print(f"[yellow]Config not found: {config_path}. Using defaults.[/yellow]")
         config = {}
+
+    # Resolve ${ENV_VAR} references in config
+    config = resolve_env_vars(config)
 
     # Overrides
     prompt_source = args.prompts or config.get("prompt_source", "sample")
@@ -199,6 +237,15 @@ def main():
 
     # Run experiments
     all_records: list[ExperimentRecord] = []
+    results_dir = Path(config.get("results_dir", "experiments/results"))
+    results_dir.mkdir(parents=True, exist_ok=True)
+    run_timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    results_path = results_dir / f"results_{run_timestamp}.json"
+
+    def _save_incremental() -> None:
+        """Save results after each method to prevent data loss."""
+        with open(results_path, "w") as _f:
+            json.dump([vars(r) for r in all_records], _f, indent=2, default=str)
 
     for method in methods:
         console.print(f"\n[bold blue]--- Running: {method} ---[/bold blue]")
@@ -221,7 +268,7 @@ def main():
                     continue
 
                 elapsed = time.time() - start
-                record = result_to_record(prompt_data, result)
+                record = result_to_record(prompt_data, result, config)
                 all_records.append(record)
 
                 console.print(
@@ -231,22 +278,22 @@ def main():
 
             except Exception as e:
                 console.print(f"  [red]ERROR: {e}[/red]")
+                # Record failure so it appears in results
+                all_records.append(ExperimentRecord(
+                    prompt_id=prompt_data.get("id", "unknown"),
+                    prompt=prompt_text,
+                    method=method,
+                    ras=0.0,
+                    apr=False,
+                    itc=0,
+                    ttc=0,
+                    response=f"ERROR: {e}",
+                ))
                 continue
 
-    # Save results
-    results_dir = Path(config.get("results_dir", "experiments/results"))
-    results_dir.mkdir(parents=True, exist_ok=True)
-
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_path = results_dir / f"results_{timestamp}.json"
-
-    with open(results_path, "w") as f:
-        json.dump(
-            [vars(r) for r in all_records],
-            f,
-            indent=2,
-            default=str,
-        )
+        # Save after each method completes (incremental)
+        _save_incremental()
+        console.print(f"  [dim]Saved {len(all_records)} records to {results_path}[/dim]")
 
     console.print(f"\n[green]Results saved to: {results_path}[/green]")
 

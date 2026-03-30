@@ -2,28 +2,16 @@
 
 from __future__ import annotations
 
+import copy
+
 from efa.llm_client import LLMClient
 from efa.models import Criterion
 
-CRITERIA_SYSTEM_PROMPT = """You are an evaluation criteria designer. Given a user prompt, generate {n} non-overlapping evaluation criteria ordered from most fundamental to least fundamental.
+CRITERIA_SYSTEM_PROMPT = """Generate EXACTLY {n} evaluation criteria as a JSON array. Be CONCISE — keep rubric descriptions under 8 words each.
 
-For each criterion, provide:
-1. Name (2-4 words)
-2. Definition (1 sentence)
-3. Scoring rubric:
-   - Score 1: [description of lowest quality]
-   - Score 2: [description of below-average quality]
-   - Score 3: [description of acceptable quality]
-   - Score 4: [description of good quality]
-   - Score 5: [description of excellent quality]
+Format: [{{"name":"X","definition":"Y","rubric":{{"1":"bad","2":"below avg","3":"ok","4":"good","5":"excellent"}}}}]
 
-Requirements:
-- Criteria must be measurable and non-overlapping
-- Order by fundamentality: correctness before style
-- Each criterion must be independently scorable
-- Criteria must be specific to this prompt, not generic
-
-Respond as a JSON array of objects with keys: "name", "definition", "rubric" (object with keys "1" through "5")."""
+Rules: non-overlapping, ordered by importance (correctness first), specific to the prompt. Generate EXACTLY {n} items, then STOP."""
 
 FIXED_CRITERIA = [
     Criterion(
@@ -102,23 +90,73 @@ def generate_criteria(
         List of Criterion objects with uniform initial weights.
     """
     if not dynamic:
-        criteria = FIXED_CRITERIA[:n_criteria]
+        criteria = copy.deepcopy(FIXED_CRITERIA[:n_criteria])
         for c in criteria:
             c.weight = 1.0 / len(criteria)
         return criteria
 
     system = CRITERIA_SYSTEM_PROMPT.format(n=n_criteria)
-    raw = client.complete_json(system=system, user=f"User prompt: {prompt}")
+
+    # Use a constrained client for criteria gen — prevent runaway output
+    crit_client = LLMClient(
+        model=client.model,
+        temperature=client.temperature,
+        max_tokens=1500,
+        tracker=client.tracker,
+        api_base=client.api_base,
+        api_key=client.api_key,
+        call_delay=client.call_delay,
+    )
+
+    # Retry up to 2 times, then fall back to fixed criteria
+    for attempt in range(2):
+        try:
+            raw = crit_client.complete_json(system=system, user=f"User prompt: {prompt}")
+            criteria = _parse_criteria_response(raw, n_criteria)
+            if criteria:
+                return criteria
+        except (ValueError, KeyError, TypeError):
+            continue
+
+    # Fallback: use fixed criteria if dynamic generation fails
+    criteria = copy.deepcopy(FIXED_CRITERIA[:n_criteria])
+    for c in criteria:
+        c.weight = 1.0 / len(criteria)
+    return criteria
+
+
+def _parse_criteria_response(raw: list | dict, n_criteria: int) -> list[Criterion]:
+    """Parse criteria from LLM response, handling multiple formats."""
+    if not isinstance(raw, list) or len(raw) == 0:
+        return []
 
     criteria = []
     for item in raw:
-        rubric = {int(k): v for k, v in item["rubric"].items()}
-        c = Criterion(
-            name=item["name"],
-            definition=item["definition"],
-            rubric=rubric,
-            weight=1.0 / n_criteria,
-        )
-        criteria.append(c)
+        if isinstance(item, str):
+            # Model returned simple strings like ["Clarity", "Accuracy"]
+            # Convert to Criterion with generic rubric
+            c = Criterion(
+                name=item[:50],
+                definition=item,
+                rubric={
+                    1: "Very poor", 2: "Below average",
+                    3: "Acceptable", 4: "Good", 5: "Excellent",
+                },
+                weight=1.0 / n_criteria,
+            )
+            criteria.append(c)
+        elif isinstance(item, dict) and "name" in item:
+            rubric_raw = item.get("rubric", {})
+            if isinstance(rubric_raw, dict):
+                rubric = {int(k): str(v) for k, v in rubric_raw.items()}
+            else:
+                rubric = {1: "Very poor", 2: "Below average", 3: "Acceptable", 4: "Good", 5: "Excellent"}
+            c = Criterion(
+                name=item["name"],
+                definition=item.get("definition", item["name"]),
+                rubric=rubric,
+                weight=1.0 / n_criteria,
+            )
+            criteria.append(c)
 
     return criteria[:n_criteria]
