@@ -1,0 +1,15 @@
+{% if draft %}
+Improve the following draft to better satisfy the criteria below.
+
+CURRENT DRAFT:
+{{ draft }}
+
+{% endif %}
+Your response MUST satisfy the following criteria, listed in priority order:
+
+{% for c in visible_criteria %}
+{{ c.priority_label(n_total) }} {{ c.name }}:
+  {{ c.definition }}
+
+{% endfor %}
+User prompt: {{ user_prompt }}

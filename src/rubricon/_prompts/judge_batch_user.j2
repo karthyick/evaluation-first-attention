@@ -1,0 +1,12 @@
+Evaluate this response against ALL criteria below.
+
+Criteria:
+{% for c in criteria %}
+{{ loop.index }}. {{ c.name }}: {{ c.definition }}
+   Rubric: 1={{ c.rubric.get(1, '') }}, {{ (scale + 1) // 2 }}={{ c.rubric.get((scale + 1) // 2, '') }}, {{ scale }}={{ c.rubric.get(scale, '') }}
+{% endfor %}
+
+Response to evaluate:
+{{ response }}
+
+Return a JSON array with one object per criterion in the same order, containing "criterion", "score" (1-{{ scale }}), and "reasoning".

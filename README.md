@@ -1,4 +1,56 @@
-# Evaluation-First Attention (EFA)
+# Rubricon
+
+**Specification-first generation for LLMs. Cross the rubricon — produce evaluation criteria *before* generation and use them as conditioning targets with failure-weighted reattention.**
+
+[![PyPI](https://img.shields.io/pypi/v/rubricon.svg)](https://pypi.org/project/rubricon/)
+[![Python](https://img.shields.io/pypi/pyversions/rubricon.svg)](https://pypi.org/project/rubricon/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+```bash
+pip install rubricon
+```
+
+```python
+from rubricon import RubriconPipeline, RubriconConfig
+
+cfg = RubriconConfig.from_dict({
+    "generator": {"model": "gpt-4o"},
+    "evaluator": {"model": "claude-sonnet-4-20250514"},
+    "criteria": {"n": 5},
+    "convergence": {"threshold": 0.6},
+    "iteration": {"max_iterations": 3},
+})
+result = RubriconPipeline(cfg).run("Explain quantum entanglement to a high school student.")
+print(result.response, result.rubric_adherence_score, result.all_pass)
+```
+
+## Highly configurable by design
+
+| Layer | Plugin protocol | Built-ins | Override via |
+|-------|----------------|-----------|--------------|
+| **Backends** | `LLMBackend` | `litellm`, `mock` | `backend_registry.register("vllm")` |
+| **Evaluators** | `Evaluator` | `llm_judge`, `regex`, `function`, `ensemble` | per-criterion mix in config |
+| **Reattention** | `ReattentionStrategy` | `focal` (FWRL), `uniform`, `softmax` | `reattention.strategy` |
+| **Convergence** | `ConvergencePolicy` | `all_pass`, `mean_threshold`, `no_improvement`, `composite` | `convergence.policy` |
+| **Templates** | Jinja2 | bundled defaults | `templates.*` paths in config |
+| **Callbacks** | `PipelineCallback` | `console`, `jsonl` | `callbacks: [{type: ...}]` |
+| **Budget** | hard limits | tokens, cost, wall, iters | `budget: {...}` |
+| **Retry** | `RetryConfig` | constant/linear/exponential | `retry: {...}` |
+
+Every knob lives on a single Pydantic `RubriconConfig`. Layered loading: defaults < YAML < env (`RUBRICON_*`) < kwargs.
+
+```bash
+rubricon run "Explain entropy" --config configs/prod.yaml
+rubricon eval --prompts mtbench.json --config configs/prod.yaml --output results.jsonl
+rubricon plugins
+rubricon config show --config configs/prod.yaml
+```
+
+The original [`efa`](src/efa) research package (paper code, baselines, ablations) ships in the same wheel for reproducibility — `from efa import EFAPipeline` keeps working.
+
+---
+
+# Evaluation-First Attention (EFA) — research
 
 **What if LLMs knew what "good" looks like before they started writing?**
 
