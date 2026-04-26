@@ -8,8 +8,9 @@ and ``function`` for arbitrary Python checks. Aggregation is configurable.
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable, Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 from rubricon.backends import LLMBackend, complete_json
 from rubricon.config import PluginSpec

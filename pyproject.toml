@@ -109,6 +109,12 @@ line-length = 100
 select = ["E", "F", "I", "N", "W", "UP"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+# Preserved research package — grandfathered style (frozen with the paper).
+"src/efa/**" = ["E402", "E741"]
+# Test files commonly use ``with patch(...) as MockLLMClient:`` which trips N806.
+"tests/test_criteria_generator.py" = ["N806"]
+
 [tool.mypy]
 python_version = "3.11"
 strict = false

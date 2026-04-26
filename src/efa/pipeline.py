@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from efa.criteria_generator import generate_criteria
 from efa.evaluator import evaluate_per_criterion
 from efa.llm_client import LLMClient
-from efa.models import Criterion, IterationTrace, PipelineResult
+from efa.models import IterationTrace, PipelineResult
 from efa.progressive_generator import progressive_generate
 from efa.reattention import check_convergence, update_weights
 

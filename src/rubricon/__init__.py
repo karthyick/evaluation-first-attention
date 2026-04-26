@@ -19,7 +19,7 @@ from rubricon.backends import (
     MockBackend,
     backend_registry,
 )
-from rubricon.budget import BudgetExceeded, BudgetTracker
+from rubricon.budget import BudgetExceeded, BudgetExceededError, BudgetTracker
 from rubricon.callbacks import (
     BaseCallback,
     ConsoleCallback,
@@ -135,6 +135,7 @@ __all__ = [
     # Budget
     "BudgetTracker",
     "BudgetExceeded",
+    "BudgetExceededError",
     # Misc
     "Registry",
     "TemplateLoader",

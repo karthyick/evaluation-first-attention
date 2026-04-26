@@ -13,8 +13,12 @@ from dataclasses import dataclass, field
 from rubricon.config import BudgetConfig
 
 
-class BudgetExceeded(RuntimeError):
+class BudgetExceededError(RuntimeError):
     """Raised when ``on_exceed='raise'`` and any limit is hit."""
+
+
+# Backwards-compatible alias — the error suffix is the idiomatic Python form.
+BudgetExceeded = BudgetExceededError
 
 
 @dataclass
@@ -53,5 +57,5 @@ class BudgetTracker:
     def enforce(self) -> str | None:
         reason = self.exhausted()
         if reason and self.config.on_exceed == "raise":
-            raise BudgetExceeded(reason)
+            raise BudgetExceededError(reason)
         return reason

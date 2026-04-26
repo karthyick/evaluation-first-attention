@@ -33,7 +33,6 @@ def test_failing_criteria_get_boosted():
         raw_scores=[4, 1, 4, 4, 4],
         reasoning=[""] * 5,
     )
-    original_w1 = criteria[1].weight
     update_weights(criteria, evaluation, alpha=2.0, threshold=0.6)
     # Criterion 1 (score=0.2) should be boosted relative to others
     # The raw weight before normalization: 0.2 * (1 + 2.0 * 0.4) = 0.2 * 1.8 = 0.36
