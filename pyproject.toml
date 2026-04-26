@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rubricon"
-version = "0.2.0"
+version = "0.2.1"
 description = "Rubricon — specification-first generation for LLMs. Cross the rubricon: rubric-conditioned generation with failure-weighted reattention."
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -18,12 +18,17 @@ maintainers = [
 keywords = [
     "llm",
     "evaluation",
+    "eval",
     "rubric",
+    "rubric-eval",
+    "llm-as-judge",
+    "judge",
     "generation",
     "tdd",
     "spec-driven",
     "criteria",
     "reattention",
+    "efa",
     "agents",
     "prompting",
     "openai",
@@ -36,9 +41,11 @@ keywords = [
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
+    "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -46,6 +53,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: Software Development :: Testing",

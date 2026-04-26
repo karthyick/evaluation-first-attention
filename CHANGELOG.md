@@ -5,9 +5,15 @@ All notable changes to Rubricon are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-04-26
+
+### Changed
+- Discoverability: added classifiers (`Environment :: Console`, `Natural Language :: English`, `Topic :: Scientific/Engineering :: Information Analysis`).
+- Discoverability: added keywords (`eval`, `rubric-eval`, `llm-as-judge`, `judge`, `efa`) for PyPI search.
+
 ## [0.2.0] - 2026-04-26
 
-First public release on PyPI under the `rubricon` name (formerly `evaluation-first-attention`).
+First public release on PyPI under the `rubricon` name (formerly `evaluation-first-attention`). Initially published to TestPyPI only.
 
 ### Added
 - `RubriconPipeline` — the new public, fully configurable pipeline.
