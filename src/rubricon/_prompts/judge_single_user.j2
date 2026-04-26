@@ -1,0 +1,12 @@
+Criterion: {{ criterion.name }}
+Definition: {{ criterion.definition }}
+
+Scoring rubric:
+{% for k, v in criterion.rubric.items() %}
+- Score {{ k }}: {{ v }}
+{% endfor %}
+
+Response to evaluate:
+{{ response }}
+
+Score this response on the "{{ criterion.name }}" criterion ONLY. Respond with JSON: {"score": <1-{{ scale }}>, "reasoning": "<explanation>"}
