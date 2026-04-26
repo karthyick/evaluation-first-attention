@@ -71,7 +71,7 @@ from rubricon.strategies import (
 )
 from rubricon.templates import TemplateLoader
 
-__version__ = "0.2.0"
+__version__ = "0.2.2"
 __author__ = "Karthick Raja M"
 __email__ = "karthickrajam18@gmail.com"
 

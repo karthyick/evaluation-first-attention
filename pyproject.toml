@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rubricon"
-version = "0.2.1"
+version = "0.2.2"
 description = "Rubricon — specification-first generation for LLMs. Cross the rubricon: rubric-conditioned generation with failure-weighted reattention."
 readme = "README.md"
 license = {file = "LICENSE"}
