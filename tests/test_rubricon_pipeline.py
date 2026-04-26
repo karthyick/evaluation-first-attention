@@ -8,8 +8,6 @@ from __future__ import annotations
 import json
 
 from rubricon import (
-    BackendConfig,
-    Criterion,
     PluginSpec,
     RubriconConfig,
     RubriconPipeline,

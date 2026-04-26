@@ -13,18 +13,13 @@ the synthesis client's .complete() call to assert all candidates are embedded.
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, call, patch
-
-import pytest
+from unittest.mock import MagicMock, patch
 
 from efa.baselines import (
     BASELINES,
-    run_best_of_n,
     run_fusion,
-    run_single_pass,
 )
 from efa.models import Criterion, EvaluationResult
-
 
 # ---------------------------------------------------------------------------
 # Patch targets

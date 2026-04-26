@@ -1,6 +1,6 @@
 """Unit tests for CMPG progressive generation — Karthick Raja M, 2026."""
 
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock
 
 from efa.models import Criterion
 from efa.progressive_generator import progressive_generate

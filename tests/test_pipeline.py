@@ -17,11 +17,8 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-import pytest
-
-from efa.models import Criterion, EvaluationResult, IterationTrace
+from efa.models import Criterion, EvaluationResult
 from efa.pipeline import EFAPipeline
-
 
 # ---------------------------------------------------------------------------
 # Shared helpers

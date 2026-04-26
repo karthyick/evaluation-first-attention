@@ -11,14 +11,14 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-from rubricon import criteria as criteria_module
 from rubricon import cmpg as cmpg_module
+from rubricon import criteria as criteria_module
 from rubricon.backends import LLMBackend, make_backend
 from rubricon.budget import BudgetTracker
 from rubricon.callbacks import CallbackBus, callback_registry
 from rubricon.config import RubriconConfig
 from rubricon.evaluators import Evaluator, build_evaluators
-from rubricon.models import Criterion, EvaluationResult, IterationTrace, PipelineResult
+from rubricon.models import EvaluationResult, IterationTrace, PipelineResult
 from rubricon.strategies import (
     ConvergencePolicy,
     ReattentionStrategy,

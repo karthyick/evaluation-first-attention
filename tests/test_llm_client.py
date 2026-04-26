@@ -4,7 +4,6 @@ import pytest
 
 from efa.llm_client import TokenTracker, _extract_json, _repair_json
 
-
 # ---------------------------------------------------------------------------
 # _repair_json
 # ---------------------------------------------------------------------------

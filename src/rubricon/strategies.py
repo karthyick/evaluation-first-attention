@@ -6,13 +6,12 @@ the convergence rule without touching the pipeline.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from math import exp
 from typing import Any, Protocol, runtime_checkable
 
 from rubricon.models import Criterion, EvaluationResult
 from rubricon.registry import Registry
-
 
 # ---------------- Reattention ----------------
 

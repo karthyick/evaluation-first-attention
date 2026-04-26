@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import copy
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from efa.criteria_generator import (
     FIXED_CRITERIA,
@@ -14,7 +11,6 @@ from efa.criteria_generator import (
 )
 from efa.llm_client import LLMClient
 from efa.models import Criterion
-
 
 # ---------------------------------------------------------------------------
 # _parse_criteria_response
