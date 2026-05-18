@@ -14,6 +14,7 @@ class Criterion:
     weight: float = 0.2
     locked: bool = False
     best_score: float = 0.0
+    threshold: float = 0.6
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def priority_label(self, n_criteria: int, scale: tuple[float, float, float] = (2.0, 1.5, 0.5)) -> str:
