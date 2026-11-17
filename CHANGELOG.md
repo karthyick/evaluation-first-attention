@@ -5,6 +5,11 @@ All notable changes to Rubricon are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `scripts/significance.py` and `docs/SIGNIFICANCE.md`: bootstrap CIs and exact McNemar tests for the 960-run MT-Bench result. EFA beats single-pass, rubric-then-score and no-iteration significantly; the lead over Self-Refine, FusioN and Best-of-5 is not significant at 80 prompts. Paper limitation updated.
+
 ## [0.2.2] - 2026-04-26
 
 ### Fixed
